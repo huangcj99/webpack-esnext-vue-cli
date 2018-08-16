@@ -2,8 +2,8 @@ const path = require('path')
 const glob = require('glob')
 
 // project webpack config
-const includeEntries = require('./include-entries.config')
-const splitChunksConfig = require('./split-chunks.config')
+// const includeEntries = require('./include-entries.config')
+// const splitChunksConfig = require('./split-chunks.config')
 
 const getEntry = (globPath, exclude) => {
   const entries = {}
@@ -30,8 +30,9 @@ const getEntry = (globPath, exclude) => {
     tmp.shift()
     tmp.shift()
     tmp.shift()
-
-    if (tmp[tmp.length - 1] === basename) {
+    
+    // 输出与目录名相同的js文件与包含-lagacy的js文件
+    if (tmp[tmp.length - 1] === basename || tmp[tmp.length - 1] + '-legacy' === basename) {
       tmp = tmp.join('/')
       pathname = `${tmp}/${basename}` // 正确输出js和html的路径
       entries[pathname] = entry

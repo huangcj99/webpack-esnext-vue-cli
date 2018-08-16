@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{6:function(n,o,t){"use strict";t.r(o),t.d(o,"import2",function(){return i});const i=`imported: ${t(2).a}`}}]);

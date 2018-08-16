@@ -4,9 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>b</title>
+  <title>a</title>
+  <script type="module" src="{{ 'vendor-modern.js' | revision }}"></script>
+  <script type="module" src="{{ 'b/b.js' | revision }}"></script>
 </head>
 <body>
-  
+  {% include 'src/assets/shim/nomodule-shim.html' %}
+  <script nomodule src="{{ 'vendor-legacy.js' | revision }}"></script>
+  <script nomodule src="{{ 'b/b-legacy.js' | revision }}"></script>
 </body>
 </html>

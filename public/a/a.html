@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>a</title>
+  <script type="module" src="/vendor-modern.modern.44e8b9ddd27697a45aa1.chunk.js"></script>
+  <script type="module" src="/a/a.modern.80a31281a15e182e7964.js"></script>
+</head>
+<body>
+  <script>
+  // https://gist.github.com/samthor/64b114e4a4f539915a95b91ffd340acc
+  (function () {
+    var check = document.createElement('script');
+    if (!('noModule' in check) && 'onbeforeload' in check) {
+      var support = false;
+      document.addEventListener('beforeload', function (e) {
+        if (e.target === check) {
+          support = true;
+        } else if (!e.target.hasAttribute('nomodule') || !support) {
+          return;
+        }
+        e.preventDefault();
+      }, true);
+      check.type = 'module';
+      check.src = '.';
+      document.head.appendChild(check);
+      check.remove();
+    }
+  }());
+</script>
+  <script nomodule src="/vendor-legacy.legacy.930b8569e509d626ccbc.chunk.js"></script>
+  <script nomodule src="/a/a-legacy.legacy.0061658cf49de558b607.js"></script>
+</body>
+</html>
