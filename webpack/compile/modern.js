@@ -1,24 +1,21 @@
-const path = require('path')
 const webpackMerge = require('webpack-merge')
 const ManifestPlugin = require('webpack-manifest-plugin');
 const { createWebpackCompile } = require('../utils/create-webpack-compile')
 const { configBabelLoader } = require('../utils/config-babel-loader')
 const configSplitChunk = require('../utils/config-split-chunk')
-const { getEntry } = require('../utils/get-entries')
 const createBaseConfig = require('./base.config')
 
-// 获取js与html入口
-let entries = getEntry('./src/pages/**/!(*legacy).js')
+let config = require('../config/project.config')
 let baseConfig = createBaseConfig()
 
 // es6
 let modernConfig = webpackMerge({}, baseConfig, {
-  entry: entries,
+  entry: config.modernEntries,
   output: {
-    path: path.resolve(process.cwd(), './public'),
-    filename: '[name].modern.[chunkhash].js',
-    chunkFilename: '[name].modern.[chunkhash].chunk.js',
-    publicPath: '/'
+    path: config.outputPath,
+    filename: config.modernFileName,
+    chunkFilename: config.modernChunkFileName,
+    publicPath: config.publicPath
   },
   module: {
     rules: [
@@ -39,15 +36,15 @@ let modernConfig = webpackMerge({}, baseConfig, {
     })
   ],
   optimization: {
-    splitChunks: configSplitChunk('modern')
+    splitChunks: configSplitChunk('modern'),
+    runtimeChunk: {
+      name: 'manifest'
+    }
   }
 })
 
-module.exports = () => {
-  // 
-  modernConfig.plugins.push(
-    
-  )
+module.exports = (prodConfig) => {
+  realModernConfig = webpackMerge(modernConfig, prodConfig)
 
-  return createWebpackCompile(modernConfig)
+  return createWebpackCompile(realModernConfig)
 }

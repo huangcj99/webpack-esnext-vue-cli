@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{6:function(n,o,i){"use strict";i.r(o),i.d(o,"import2",function(){return p});var p="imported: "+i(2).a}}]);

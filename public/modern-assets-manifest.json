@@ -1,7 +1,8 @@
 {
-  "vendor-modern.js": "/vendor-modern.modern.44e8b9ddd27697a45aa1.chunk.js",
-  "a/a.js": "/a/a.modern.80a31281a15e182e7964.js",
-  "b/b.js": "/b/b.modern.1ab02cabfeea3a5fabb2.js",
-  "import-1.js": "/import-1.modern.d45704d07d9f62ab7d6e.chunk.js",
-  "import-2.js": "/import-2.modern.dadc4798189f62f4a7e8.chunk.js"
+  "a/a.js": "/a/a.c3ca72c9f2dc5e340a31.chunk.js",
+  "b/b.js": "/b/b.c8c6cfb2689140620e32.chunk.js",
+  "import-1.js": "/import-1.b6aa10f02005d8609739.chunk.js",
+  "import-2.js": "/import-2.b8e2567310dffefd98cd.chunk.js",
+  "manifest.js": "/manifest.64c33c33a51a5f1204c4.js",
+  "vendor.js": "/vendor.e986f083dc073aa983a1.chunk.js"
 }

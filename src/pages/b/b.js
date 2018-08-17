@@ -8,7 +8,7 @@ const main = async () => {
   const {import2} = await import(/* webpackChunkName: "import-2" */ '../../libs/import-2')
   console.log('Dynamic Import 2 value:', import2)
 
-  (async () => {
+  ;(async () => {
     await new Promise((resolve, reject) => {
       setTimeout(() => {
         console.log('async')

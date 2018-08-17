@@ -1,4 +1,3 @@
-const path = require('path')
 const webpackMerge = require('webpack-merge')
 const ManifestPlugin = require('webpack-manifest-plugin');
 const { createWebpackCompile } = require('../utils/create-webpack-compile')
@@ -7,18 +6,17 @@ const configSplitChunk = require('../utils/config-split-chunk')
 const { getEntry } = require('../utils/get-entries')
 const createBaseConfig = require('./base.config')
 
-// 获取js与html入口
-let entries = getEntry('./src/pages/**/+(*legacy).js')
+let config = require('../config/project.config')
 let baseConfig = createBaseConfig()
 
 // es5
 let legacyConfig = webpackMerge({}, baseConfig, {
-  entry: entries,
+  entry: config.legacyEntries,
   output: {
-    path: path.resolve(process.cwd(), './public'),
-    filename: '[name].legacy.[chunkhash].js',
-    chunkFilename: '[name].legacy.[chunkhash].chunk.js',
-    publicPath: '/'
+    path: config.outputPath,
+    filename: config.legacyFileName,
+    chunkFilename: config.legacyChunkFileName,
+    publicPath: config.publicPath
   },
   module: {
     rules: [
@@ -37,10 +35,15 @@ let legacyConfig = webpackMerge({}, baseConfig, {
     })
   ],
   optimization: {
-    splitChunks: configSplitChunk('legacy')
+    splitChunks: configSplitChunk('legacy'),
+    runtimeChunk: {
+      name: 'manifest-legacy'
+    }
   }
 })
 
-module.exports = () => {
-  return createWebpackCompile(legacyConfig)
+module.exports = (prodConfig) => {
+  realLegacyConfig = webpackMerge(legacyConfig, prodConfig)
+
+  return createWebpackCompile(realLegacyConfig)
 }

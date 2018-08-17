@@ -4,6 +4,7 @@ const createWebpackCompile = (config) => {
   const compiler = webpack(config)
 
   return new Promise((resolve, reject) => {
+    // 开始编译
     compiler.run((err, stats) => {
       if (err) {
         return reject(err)

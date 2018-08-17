@@ -1,7 +1,8 @@
 {
-  "vendor-legacy.js": "/vendor-legacy.legacy.930b8569e509d626ccbc.chunk.js",
-  "a/a-legacy.js": "/a/a-legacy.legacy.0061658cf49de558b607.js",
-  "b/b-legacy.js": "/b/b-legacy.legacy.cc5152835d80af044e4a.js",
-  "import-1.js": "/import-1.legacy.fe53bf6a4986193ccd22.chunk.js",
-  "import-2.js": "/import-2.legacy.05a5201324fda96d5c1d.chunk.js"
+  "a/a-legacy.js": "/a/a-legacy.legacy.0883dcf16f91f50f7d0e.chunk.js",
+  "b/b-legacy.js": "/b/b-legacy.legacy.f203985a1d80673bfe0f.chunk.js",
+  "import-1.js": "/import-1.legacy.776800bff62175b27351.chunk.js",
+  "import-2.js": "/import-2.legacy.f379132aca2edceb70cb.chunk.js",
+  "manifest-legacy.js": "/manifest-legacy.legacy.918ac421d01b577e42d8.js",
+  "vendor-legacy.js": "/vendor-legacy.legacy.1d42e4064d3c730d6c65.chunk.js"
 }

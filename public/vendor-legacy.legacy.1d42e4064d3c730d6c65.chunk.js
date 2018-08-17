@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["vendor-legacy"],{aqPF:function(n,a,o){"use strict";a.a={a:1,b:2}}}]);

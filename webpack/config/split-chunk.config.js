@@ -16,4 +16,12 @@ const splitChunksConfig = {
   }
 }
 
-module.exports = splitChunksConfig
+const defaultAssetsConfig = {
+  inlineAssets: ['manifest'],
+  chunks: ['manifest', 'vendor']
+}
+
+module.exports = {
+  splitChunksConfig,
+  defaultAssetsConfig
+}

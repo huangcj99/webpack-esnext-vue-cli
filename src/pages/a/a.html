@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>a</title>
-  <script type="module" src="{{ 'vendor-modern.js' | revision }}"></script>
-  <script type="module" src="{{ 'a/a.js' | revision }}"></script>
+  {{ modern }}
 </head>
 <body>
   {% include 'src/assets/shim/nomodule-shim.html' %}
-  <script nomodule src="{{ 'vendor-legacy.js' | revision }}"></script>
-  <script nomodule src="{{ 'a/a-legacy.js' | revision }}"></script>
+  {{ legacy }}
 </body>
 </html>
