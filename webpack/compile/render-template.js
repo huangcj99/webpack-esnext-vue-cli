@@ -2,28 +2,74 @@ const path = require('path')
 const fs = require('fs-extra')
 const nunjucks = require('nunjucks');
 const config = require('../config/project.config')
+const { defaultAssetsConfig } = require('../config/split-chunk.config')
+const {
+  createModernAssetsScript,
+  createLagacyAssetsScript,
+  removeComment
+} = require('../utils/assets-utils')
+const {
+  loadModernManifest,
+  loadLagacyManifest
+} = require('../utils/load-assets-manifest')
 
-const modernAssetManifestPath = path.resolve(process.cwd(), './public/legacy-assets-manifest.json')
-const legacyAssetManifestPath = path.resolve(process.cwd(), './public/legacy-assets-manifest.json')
+// 用于在Filter中，给入口html注入入口js
+let currentJsEntry = ''
+// 资源表
+let modernAssetManifest = {}
+let lagacyAssetManifest = {}
 
-const createModernAssetsScript = (assetPath) => {
-  return `<script type="module" src="${assetPath}"></script>`
-}
+const renderDefaultAssets = (boundleType) => {
+  let chunks = Array.from(defaultAssetsConfig.chunks)
+  let boundle = {
+    'modern': () => {
+      let scripts = ''
 
-const createLagacyAssetsScript = (assetPath) => {
-  return `<script nomodule src="${assetPath}"></script>`
+      chunks.forEach((chunk) => {
+        let chunkPath = chunk + '.js'
+        let chunkHashPath = modernAssetManifest[chunkPath]
+
+        // 第二条script拼接加上回车符和一个制表符，对齐输出
+        if (scripts === '') {
+          scripts = createModernAssetsScript(chunkHashPath)
+        } else {
+          scripts = `${scripts}\n\t${createModernAssetsScript(chunkHashPath)}`
+        }
+      })
+
+      return scripts
+    },
+    'legacy': () => {
+      let scripts = ''
+
+      chunks.forEach((chunk) => {
+        let chunkPath = chunk + '-legacy.js'
+        let chunkHashPath = lagacyAssetManifest[chunkPath]
+
+        // 第二条script拼接加上回车符和一个制表符，对齐输出
+        if (scripts === '') {
+          scripts = createLagacyAssetsScript(chunkHashPath)
+        } else {
+          scripts = `${scripts}\n\t${createLagacyAssetsScript(chunkHashPath)}`
+        }
+      })
+
+      return scripts
+    }
+  }
+
+  chunks.push(currentJsEntry)
+
+  return boundle[boundleType]()
 }
 
 const renderTemplate = () => {
   return new Promise((resolve, reject) => {
-    // 获取入口js的模板html
-    let pages = config.htmlEntries
-    let modernAssetManifest = fs.readJsonSync(modernAssetManifestPath, {
-      throws: false
-    }) || {}
-    let lagacyAssetManifest = fs.readJsonSync(legacyAssetManifestPath, {
-      throws: false
-    }) || {};
+    let htmlEntries = config.htmlEntries
+
+    // 加载资源表
+    modernAssetManifest = loadModernManifest()
+    lagacyAssetManifest = loadLagacyManifest()
 
     // 设置项目主目录为nunjucks根路径
     const env = nunjucks.configure(process.cwd(), {
@@ -31,35 +77,27 @@ const renderTemplate = () => {
     });
 
     // 添加注入资源的过滤器
-    env.addFilter('addAssets', (filename, boundleType) => {
-      // let asset = boundleType == 'modern' ? `${filename}.js` : `${filename}-${boundleType}.js`
-      // if (boundleType === 'legacy' && lagacyAssetManifest[asset]) {
-      //   return lagacyAssetManifest[asset]
-      // }
-      // console.log('---')
-      // console.log(filename)
-      // console.log(boundleType)
-
-      // if (boundleType === 'modern' && modernAssetManifest[asset]) {
-      //   console.log(asset)
-
-      //   return modernAssetManifest[asset]
-      // }
+    env.addFilter('addAssets', (boundleType, chunks) => {
+      if (!chunks) {
+        return renderDefaultAssets(boundleType)
+      }
     });
 
     // 输出html
-    for (let htmlDir in pages) {
-      console.log(htmlDir)
+    for (let htmlDir in htmlEntries) {
       ;(async () => {
-        let html = nunjucks.render(pages[htmlDir], {
-          modern: createModernAssetsScript('/a/a.js'),
-          legacy: ''
-        })
+        let htmlOutputPath = path.resolve(process.cwd(), './public/' + htmlDir + '.html')
+        let html = fs.readFileSync(htmlEntries[htmlDir]).toString()
 
-        await fs.outputFile(path.resolve(process.cwd(), './public/' + htmlDir + '.html'), html)
+        // 设置当前入口js路径
+        currentJsEntry = htmlDir
+        html = removeComment(html)
+
+        await fs.outputFile(htmlOutputPath, nunjucks.renderString(html))
       })()
     }
 
+    // 结束渲染
     resolve()
   })
 }

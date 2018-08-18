@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>a</title>
-  {{ modern }}
+  <!-- {{ 'modern' | addAssets(['manifest:inline', 'vendor']) }} -->
 </head>
 <body>
-  {% include 'src/assets/shim/nomodule-shim.html' %}
-  {{ legacy }}
+  <!-- {{ 'legacy' | addAssets(['manifest:inline', 'vendor']) }} -->
 </body>
 </html>
