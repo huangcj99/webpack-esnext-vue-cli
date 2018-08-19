@@ -1,21 +1,22 @@
+const webpack = require('webpack')
+
 const createWebpackCompile = (config) => {
   const compiler = webpack(config)
 
-  return () => {
-    return new Promise((resolve, reject) => {
-      compiler.run((err, stats) => {
-        if (err) {
-          return reject(err)
-        }
+  return new Promise((resolve, reject) => {
+    // 开始编译
+    compiler.run((err, stats) => {
+      if (err) {
+        return reject(err)
+      }
 
-        console.log(stats.toString({
-          colors: true
-        }) + '\n')
+      console.log(stats.toString({
+        colors: true
+      }) + '\n')
 
-        resolve()
-      })
+      resolve()
     })
-  }
+  })
 }
 
 module.exports = {
