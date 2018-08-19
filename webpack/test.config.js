@@ -1,5 +1,10 @@
 const compileModern = require('./compile/modern')
 const compileLegacy = require('./compile/legacy')
+const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const {
+  renderTemplate
+} = require('./compile/render-template')
 
 const testConfig = {
   mode: 'none',
@@ -12,7 +17,7 @@ const testConfig = {
       uglifyES: {
         mangle: false, // 不压缩变量名
         output: {
-          beautify: true, // 格式化
+          beautify: false, // 不需要格式化
           comments: false // 不保留注释
         },
         compress: {
@@ -32,5 +37,6 @@ const testConfig = {
   // 构建es5
   await compileLegacy(testConfig)
 
-  
+  // 渲染html模板，插入对应页面依赖的资源
+  await renderTemplate()
 })()
