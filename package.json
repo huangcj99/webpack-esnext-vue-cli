@@ -4,7 +4,7 @@
   "description": "support multiple entries、exnext and es5 output、split chunk freely",
   "main": "index.js",
   "scripts": {
-    "dev": "rm -rf ./public && cross-env NODE_ENV=development node webpack/dev.config.js",
+    "dev": "cross-env NODE_ENV=development node webpack/dev.config.js",
     "build:test": "cross-env NODE_ENV=test node webpack/test.config.js",
     "build:prod": "rm -rf ./public && cross-env NODE_ENV=production node webpack/prod.config.js"
   },
@@ -38,7 +38,6 @@
     "happypack": "^5.0.0",
     "html-webpack-include-assets-plugin": "^1.0.4",
     "html-webpack-plugin": "^3.2.0",
-    "html-webpack-plugin-webpack-dev-server": "^1.0.2",
     "md5": "^2.2.1",
     "node-notifier": "^5.2.1",
     "nunjucks": "^3.0.1",

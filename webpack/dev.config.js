@@ -1,6 +1,6 @@
+const fs = require('fs-extra')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
-const webpackAutoRefreshPlugin  = require('html-webpack-plugin-webpack-dev-server')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
@@ -8,10 +8,12 @@ const Notifier = require('node-notifier')
 const { configBabelLoader } = require('./utils/config-babel-loader')
 const { getHtmlPlugins } = require('./utils/config-html-plugin')
 const { createWebpackCompile } = require('./utils/create-webpack-compile')
+const shouldCreateNewDll = require('./utils/should-create-new-dll')
+
 const dllConfig = require('./dll.config')
 const config = require('./config/project.config')
-
 const htmlPlugins = getHtmlPlugins(config.htmlEntries, config.modernEntries)
+
 
 const developmentConfig = {
   devtool: '#cheap-module-eval-source-map',
@@ -60,24 +62,27 @@ const developmentConfig = {
 
     ...htmlPlugins,
 
-    // 注入server的脚本，自动刷新
-    new webpackAutoRefreshPlugin({
-      port: config.development.port, 
-      ip: config.development.host
-    }),
-
     //给每一个入口添加打包好的vender.dll.js
     new HtmlWebpackIncludeAssetsPlugin({
       assets: ['vendor.dll.js'],
       append: false, //在body尾部的第一条引入
       hash: true
+    }),
+
+    // 注入server的脚本，自动刷新
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: ['webpack-dev-server.js'],
+      append: true //在body尾部的第一条引入
     })
   ]
 }
 
 ;(async () => {
-  await createWebpackCompile(dllConfig)
-
+  // 创建新的dll文件
+  if (shouldCreateNewDll()) {
+    await createWebpackCompile(dllConfig)
+  }
+  
   await new Promise((resolve, reject) => {
     let compiler = null
     let server = null

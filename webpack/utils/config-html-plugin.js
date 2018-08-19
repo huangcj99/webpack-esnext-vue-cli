@@ -10,11 +10,7 @@ const getHtmlPlugins = (pages, entries) => {
       let conf = {
         filename: `${pathname}.html`,
         template: pages[pathname], // 模板路径
-        minify: {
-          removeComments: false, //移除HTML中的注释
-          collapseWhitespace: false, //折叠空白区域 也就是压缩代码
-          removeAttributeQuotes: false, //去除属性引用
-        },
+        minify: false,
         inject: true, // js插入位置
         chunks: [] // 依赖插入顺序
       }
