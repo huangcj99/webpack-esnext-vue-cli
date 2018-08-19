@@ -32,7 +32,7 @@ const createLagacyAssetsScript = (assetPath, param) => {
 
 // 将注释后的模板语法替换成注释内内容，用于后期nunjucks过滤器渲染资源路径
 const removeComment = (html) => {
-  return html.replace(/<!--(\s?)({{.*}})(\s?)-->/g, '$2')
+  return html.replace(/<!--(\s?)({.*})(\s?)-->/g, '$2')
 }
 
 module.exports = {

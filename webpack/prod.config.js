@@ -1,10 +1,8 @@
-const webpackMerge = require('webpack-merge')
 const compileModern = require('./compile/modern')
 const compileLegacy = require('./compile/legacy')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { renderTemplate } = require('./compile/render-template')
-const baseConfig = require('./base.config')
 
 const productionConfig = {
   mode: 'production',

@@ -1,6 +1,6 @@
-const fs = require('fs-extra')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
@@ -13,7 +13,6 @@ const shouldCreateNewDll = require('./utils/should-create-new-dll')
 const dllConfig = require('./dll.config')
 const config = require('./config/project.config')
 const htmlPlugins = getHtmlPlugins(config.htmlEntries, config.modernEntries)
-
 
 const developmentConfig = {
   devtool: '#cheap-module-eval-source-map',
@@ -73,7 +72,10 @@ const developmentConfig = {
     new HtmlWebpackIncludeAssetsPlugin({
       assets: ['webpack-dev-server.js'],
       append: true //在body尾部的第一条引入
-    })
+    }),
+
+    // 显示进度条
+    new ProgressBarPlugin()
   ]
 }
 

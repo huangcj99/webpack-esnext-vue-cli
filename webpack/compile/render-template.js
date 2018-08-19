@@ -18,6 +18,12 @@ let currentJsEntry = ''
 // 资源表
 let modernAssetManifest = {}
 let lagacyAssetManifest = {}
+// chunk cache
+let chunkCaches = {}
+let commonChunks = Array.from(defaultAssetsConfig.chunks)
+// Safair shim
+let shimPath = path.resolve(process.cwd(), './src/assets/shim/nomodule-shim.html')
+let shim = fs.readFileSync(shimPath).toString()
 
 const renderAssets = (boundleType, chunks) => {
   let scripts = ''
@@ -25,6 +31,12 @@ const renderAssets = (boundleType, chunks) => {
   // 默认添加入口js
   chunks.push(currentJsEntry)
 
+  // 添加shim，解决Safair10版本不支持nomodule的问题
+  if (boundleType === 'legacy') {
+    scripts = shim
+  }
+
+  // 拼接资源script
   chunks.forEach((chunk) => {
     let script = ''
     let chunkInfo = chunk.split(':')
@@ -35,13 +47,37 @@ const renderAssets = (boundleType, chunks) => {
     if (boundleType === 'modern') {
       chunkPath = chunkInfo[0] + '.js'
       chunkHashPath = modernAssetManifest[chunkPath]
-      script = createModernAssetsScript(chunkHashPath, param)
+
+      // 入口通用chunk首次读取完后加入chunkCaches中，避免频繁进行io读取
+      if (commonChunks.indexOf(chunk) !== -1) {
+        // 不存在缓存中则创建，并加入缓存
+        if (!chunkCaches[chunkPath]) {
+          script = createModernAssetsScript(chunkHashPath, param)
+          chunkCaches[chunkPath] = script
+        } else {
+          script = chunkCaches[chunkPath]
+        }
+      } else {
+        script = createModernAssetsScript(chunkHashPath, param)
+      }
     }
 
     if (boundleType === 'legacy') {
       chunkPath = chunkInfo[0] + '-legacy.js'
       chunkHashPath = lagacyAssetManifest[chunkPath]
-      script = createLagacyAssetsScript(chunkHashPath, param)
+
+      // 入口通用chunk首次读取完后加入chunkCaches中，避免频繁进行io读取
+      if (commonChunks.indexOf(chunk) !== -1) {
+        // 不存在缓存中则创建，并加入缓存
+        if (!chunkCaches[chunkPath]) {
+          script = createLagacyAssetsScript(chunkHashPath, param)
+          chunkCaches[chunkPath] = script
+        } else {
+          script = chunkCaches[chunkPath]
+        }
+      } else {
+        script = createLagacyAssetsScript(chunkHashPath, param)
+      }
     }
 
     scripts = `${scripts}\n\t${script}`
