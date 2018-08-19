@@ -83,6 +83,7 @@ const developmentConfig = {
     await createWebpackCompile(dllConfig)
   }
   
+  // 开启webpack-dev-server
   await new Promise((resolve, reject) => {
     let compiler = null
     let server = null
@@ -90,7 +91,6 @@ const developmentConfig = {
     // 创建compile
     compiler = webpack(developmentConfig)
 
-    // 开启webpack-dev-server
     server = new WebpackDevServer(compiler, {
       host: config.development.host,
       port: config.development.port,

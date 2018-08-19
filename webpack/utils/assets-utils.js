@@ -6,6 +6,7 @@ const publicPath = config.outputPath
 
 // 创建es6语法boundles
 const createModernAssetsScript = (assetPath, param) => {
+  //  参数为inline则将资源内联
   if (param && param === 'inline') {
     let assetoutputPath = path.join(publicPath, assetPath)
 
@@ -18,6 +19,7 @@ const createModernAssetsScript = (assetPath, param) => {
 
 // 创建es5语法boundles
 const createLagacyAssetsScript = (assetPath, param) => {
+  //  参数为inline则将资源内联
   if (param && param === 'inline') {
     let assetoutputPath = path.join(publicPath, assetPath)
     let asset = fs.readFileSync(assetoutputPath).toString()
