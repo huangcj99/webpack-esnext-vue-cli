@@ -19,48 +19,37 @@ let currentJsEntry = ''
 let modernAssetManifest = {}
 let lagacyAssetManifest = {}
 
-const renderDefaultAssets = (boundleType) => {
-  let chunks = Array.from(defaultAssetsConfig.chunks)
-  let boundle = {
-    'modern': () => {
-      let scripts = ''
+const renderAssets = (boundleType, chunks) => {
+  let scripts = ''
+  
+  // 默认添加入口js
+  chunks.push(currentJsEntry)
 
-      chunks.forEach((chunk) => {
-        let chunkPath = chunk + '.js'
-        let chunkHashPath = modernAssetManifest[chunkPath]
+  chunks.forEach((chunk) => {
+    let script = ''
+    let chunkInfo = chunk.split(':')
+    let param = chunkInfo[1] //是否需要内联
+    let chunkPath = ''
+    let chunkHashPath = ''
 
-        // 第二条script拼接加上回车符和一个制表符，对齐输出
-        if (scripts === '') {
-          scripts = createModernAssetsScript(chunkHashPath)
-        } else {
-          scripts = `${scripts}\n\t${createModernAssetsScript(chunkHashPath)}`
-        }
-      })
-
-      return scripts
-    },
-    'legacy': () => {
-      let scripts = ''
-
-      chunks.forEach((chunk) => {
-        let chunkPath = chunk + '-legacy.js'
-        let chunkHashPath = lagacyAssetManifest[chunkPath]
-
-        // 第二条script拼接加上回车符和一个制表符，对齐输出
-        if (scripts === '') {
-          scripts = createLagacyAssetsScript(chunkHashPath)
-        } else {
-          scripts = `${scripts}\n\t${createLagacyAssetsScript(chunkHashPath)}`
-        }
-      })
-
-      return scripts
+    if (boundleType === 'modern') {
+      chunkPath = chunkInfo[0] + '.js'
+      chunkHashPath = modernAssetManifest[chunkPath]
+      script = createModernAssetsScript(chunkHashPath, param)
     }
-  }
+
+    if (boundleType === 'legacy') {
+      chunkPath = chunkInfo[0] + '-legacy.js'
+      chunkHashPath = lagacyAssetManifest[chunkPath]
+      script = createLagacyAssetsScript(chunkHashPath, param)
+    }
+
+    scripts = `${scripts}\n\t${script}`
+  })
 
   chunks.push(currentJsEntry)
 
-  return boundle[boundleType]()
+  return scripts
 }
 
 const renderTemplate = () => {
@@ -78,9 +67,14 @@ const renderTemplate = () => {
 
     // 添加注入资源的过滤器
     env.addFilter('addAssets', (boundleType, chunks) => {
+      // 没有传入对应的chunks时加载默认chunk
       if (!chunks) {
-        return renderDefaultAssets(boundleType)
+        let defaultChunks = Array.from(defaultAssetsConfig.chunks)
+
+        return renderAssets(boundleType, defaultChunks)
       }
+
+      return renderAssets(boundleType, chunks)
     });
 
     // 输出html

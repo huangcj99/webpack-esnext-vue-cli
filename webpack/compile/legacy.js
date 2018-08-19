@@ -18,17 +18,14 @@ let legacyConfig = webpackMerge({}, baseConfig, {
     chunkFilename: config.legacyChunkFileName,
     publicPath: config.publicPath
   },
-  module: {
-    rules: [
-      // 配置旧版本需要兼容的浏览器
-      configBabelLoader([
-        '> 1%',
-        'last 2 versions',
-        'Firefox ESR',
-      ])
-    ]
-  },
   plugins: [
+    // 配置旧版本需要兼容的浏览器
+    configBabelLoader([
+      '> 1%',
+      'last 2 versions',
+      'Firefox ESR',
+    ]),
+
     // 输出资源表
     new ManifestPlugin({
       fileName: 'legacy-assets-manifest.json'

@@ -8,17 +8,21 @@ const splitChunksConfig = {
     priority: 10
   },
   // 自动分割
-  common: {
-    name: 'common',
-    minChunks: 5,
+  commons: {
+    name: 'commons',
+    minChunks: 2,
+    minSize: 0,
     chunks: 'all',
     priority: 1
   }
 }
 
 const defaultAssetsConfig = {
-  inlineAssets: ['manifest'],
-  chunks: ['manifest', 'vendor']
+  chunks: [
+    'manifest:inline', 
+    'vendor',
+    'commons'
+  ]
 }
 
 module.exports = {

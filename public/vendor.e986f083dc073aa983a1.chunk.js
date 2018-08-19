@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([["vendor"],{aqPF:function(n,o,w){"use strict";o.a={a:1,b:2}}}]);

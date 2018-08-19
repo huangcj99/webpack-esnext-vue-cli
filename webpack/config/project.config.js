@@ -1,10 +1,12 @@
-const path = require('path')
+const { resolve } = require('path')
 const { getEntry } = require('../utils/get-entries')
 
 const env = process.env.NODE_ENV
 
 // dev/test/production config
 const config = {
+  env: process.env.NODE_ENV,
+  
   // html entries
   htmlEntries: getEntry('./src/pages/**/*.html'),
   // modern entries
@@ -13,7 +15,7 @@ const config = {
   legacyEntries: getEntry('./src/pages/**/+(*legacy).js'),
 
   // output config
-  outputPath: path.resolve(process.cwd(), './public'),
+  outputPath: resolve(process.cwd(), './public'),
   publicPath: '/',
 
   // modern boundles
@@ -31,7 +33,7 @@ const config = {
     chunkFilename: '[name].chunk.js',
     proxy: {
       '/api/**': {
-        target: 'http://dev.api.jishiqi.dingdingyisheng.mobi', // 服务器地址
+        target: 'http://test.weixin.api.renbo.dingdingyisheng.mobi', // 服务器地址
         changeOrigin: true
       }
     }
@@ -47,6 +49,25 @@ const config = {
     },
     production: {
       __MODE__: JSON.stringify(env)
+    }
+  },
+
+  resolve: {
+    extensions: ['.js', '.vue'],
+    //优先搜索src下的公共资源目录
+    modules: [
+      resolve("../src/assets"),
+      resolve("../src/libs"),
+      resolve("../src/components"),
+      resolve("../src/plugin"),
+      "node_modules"
+    ],
+    alias: {
+      // 公共资源
+      'assets': resolve('../src/assets'),
+      'libs': resolve('../src/libs'),
+      'components': resolve('../src/components'),
+      'plugin': resolve('../src/plugin'),
     }
   }
 }

@@ -1,10 +1,30 @@
+const path = require('path')
+const fs = require('fs-extra')
+const config = require('../config/project.config')
+
+const publicPath = config.outputPath
+
 // 创建es6语法boundles
-const createModernAssetsScript = (assetPath) => {
+const createModernAssetsScript = (assetPath, param) => {
+  if (param && param === 'inline') {
+    let assetoutputPath = path.join(publicPath, assetPath)
+
+    let asset = fs.readFileSync(assetoutputPath).toString()
+    return `<script type="module">${asset}</script>`
+  }
+
   return `<script type="module" src="${assetPath}"></script>`
 }
 
 // 创建es5语法boundles
-const createLagacyAssetsScript = (assetPath) => {
+const createLagacyAssetsScript = (assetPath, param) => {
+  if (param && param === 'inline') {
+    let assetoutputPath = path.join(publicPath, assetPath)
+    let asset = fs.readFileSync(assetoutputPath).toString()
+
+    return `<script nomodule>${asset}</script>`
+  }
+
   return `<script nomodule src="${assetPath}"></script>`
 }
 

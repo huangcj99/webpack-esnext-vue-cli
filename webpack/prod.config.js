@@ -1,11 +1,13 @@
+const webpackMerge = require('webpack-merge')
 const compileModern = require('./compile/modern')
 const compileLegacy = require('./compile/legacy')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { renderTemplate } = require('./compile/render-template')
+const baseConfig = require('./base.config')
 
 const productionConfig = {
-  mode: process.env.NODE_ENV,
+  mode: 'production',
   devtool: false,
   plugins: [
     // 多线程压缩
@@ -55,7 +57,6 @@ const productionConfig = {
   // 构建es5
   await compileLegacy(productionConfig)
 
-  // 渲染html模板，插入资源
+  // 渲染html模板，插入对应页面依赖的资源
   await renderTemplate()
-  
 })()
