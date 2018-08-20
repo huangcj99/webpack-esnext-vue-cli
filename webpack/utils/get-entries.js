@@ -2,8 +2,9 @@ const path = require('path')
 const glob = require('glob')
 
 // project webpack config
-// const includeEntries = require('./include-entries.config')
-// const splitChunksConfig = require('./split-chunks.config')
+const env = process.env.NODE_ENV
+const includeEntries = require('../config/dev-include-entries.config')
+const excludeEntries = require('../config/exclude-entries.config')
 
 const getEntry = (globPath, exclude) => {
   const entries = {}
@@ -41,49 +42,58 @@ const getEntry = (globPath, exclude) => {
   })
 
   return entries
-};
+}
 
 // 过滤入口
 const filterEntries = (entries) => {
-  if (includeEntries[0] === 'all') {
-    return entries
-  }
-
   let filterEntries = {}
+  let filterPath = env === 'development' ?
+    includeEntries :
+    excludeEntries
 
-  for (let key in entries) {
-    for (let i = 0; i < includeEntries.length; i++) {
-      let hasInclude = key.indexOf(includeEntries[i])
+  // 开发时，include entries
+  if (env === 'development') {
+    // 第一项为all则构建全部入口
+    if (filterPath[0] === 'all') {
+      return entries
+    }
 
-      if (hasInclude !== -1) {
-        filterEntries[key] = entries[key]
+    // 遍历入口
+    for (let key in entries) {
+      // 遍历需要过滤的入口
+      for (let i = 0; i < filterPath.length; i++) {
+        let hasInclude = key.indexOf(filterPath[i])
+
+        // 匹配到则加入
+        if (hasInclude !== -1) {
+          filterEntries[key] = entries[key]
+          break
+        }
       }
     }
+  } else {
+    // 打包（test or prod），exclude entries
+    // 遍历exclude entries
+    for (let i = 0; i < filterPath.length; i++) {
+      // 遍历entries
+      for (let key in entries) {
+        let hasExclude = key.indexOf(filterPath[i])
+
+        // 匹配到，删除入口，跳出循环
+        if (hasExclude !== -1) {
+          delete entries[key]
+          break
+        }
+      }
+    }
+
+    filterEntries = entries
   }
 
   return filterEntries
 }
 
-// options传入获取过滤后的入口
-const getFilterEntries = (globPath, shouldFilter) => {
-  if (shouldFilter && shouldFilter === 'filter') {
-    return filterEntries(getEntry(globPath))
-  } else {
-    return getEntry(globPath)
-  }
-}
-
-// 将单独打包的配置注入到入口当中
-const setSplitChunksToEntry = (entries) => {
-  for (let chunk in splitChunksConfig) {
-    entries[chunk] = splitChunksConfig[chunk]
-  }
-
-  return entries
-}
-
 module.exports = {
   getEntry,
-  getFilterEntries,
-  setSplitChunksToEntry
+  filterEntries
 }

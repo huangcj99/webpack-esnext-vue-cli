@@ -3,6 +3,7 @@ const fs = require('fs-extra')
 const nunjucks = require('nunjucks');
 const config = require('../config/project.config')
 const { defaultAssetsConfig } = require('../config/split-chunk.config')
+const { filterEntries } = require('../utils/get-entries')
 const {
   createModernAssetsScript,
   createLagacyAssetsScript,
@@ -90,7 +91,7 @@ const renderAssets = (boundleType, chunks) => {
 
 const renderTemplate = () => {
   return new Promise((resolve, reject) => {
-    let htmlEntries = config.htmlEntries
+    let htmlEntries = filterEntries(config.htmlEntries)
 
     // 加载资源表
     modernAssetManifest = loadModernManifest()

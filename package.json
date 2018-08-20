@@ -4,9 +4,11 @@
   "description": "support multiple entries、exnext and es5 output、split chunk freely",
   "main": "index.js",
   "scripts": {
+    "prebuild:test": "sh bin/clean-public.sh",
+    "prebuild:prod": "sh bin/clean-public.sh",
     "dev": "cross-env NODE_ENV=development node webpack/dev.config.js",
     "build:test": "cross-env NODE_ENV=test node webpack/test.config.js",
-    "build:prod": "rm -rf ./public && cross-env NODE_ENV=production node webpack/prod.config.js"
+    "build:prod": "cross-env NODE_ENV=production node webpack/prod.config.js"
   },
   "repository": {
     "type": "git",

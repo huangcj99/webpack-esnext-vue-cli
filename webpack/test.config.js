@@ -1,10 +1,8 @@
 const compileModern = require('./compile/modern')
 const compileLegacy = require('./compile/legacy')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const {
-  renderTemplate
-} = require('./compile/render-template')
+const { renderTemplate } = require('./compile/render-template')
+const { cleanAssetsManifest } = require('./utils/load-assets-manifest')
 
 const testConfig = {
   mode: 'none',
@@ -39,4 +37,9 @@ const testConfig = {
 
   // 渲染html模板，插入对应页面依赖的资源
   await renderTemplate()
+
+  // 清理资源表
+  await cleanAssetsManifest()
+
+  console.log('Build successfully')
 })()

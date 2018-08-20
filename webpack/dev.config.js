@@ -9,15 +9,28 @@ const { configBabelLoader } = require('./utils/config-babel-loader')
 const { getHtmlPlugins } = require('./utils/config-html-plugin')
 const { createWebpackCompile } = require('./utils/create-webpack-compile')
 const shouldCreateNewDll = require('./utils/should-create-new-dll')
+const { filterEntries } = require('./utils/get-entries')
 
 const dllConfig = require('./dll.config')
 const config = require('./config/project.config')
-const htmlPlugins = getHtmlPlugins(config.htmlEntries, config.modernEntries)
+const htmlPlugins = getHtmlPlugins(filterEntries(config.htmlEntries), filterEntries(config.modernEntries))
+const devServerConfig = {
+  host: config.development.host,
+  port: config.development.port,
+  contentBase: config.outputPath,
+  publicPath: '/',
+  proxy: config.development.proxy,
+  inline: true,
+  quiet: true,
+  stats: {
+    colors: true
+  }
+}
 
 const developmentConfig = {
   devtool: '#cheap-module-eval-source-map',
   mode: config.env,
-  entry: config.modernEntries,
+  entry: filterEntries(config.modernEntries),
   output: {
     path: config.outputPath,
     filename: config.development.filename,
@@ -68,12 +81,6 @@ const developmentConfig = {
       hash: true
     }),
 
-    // 注入server的脚本，自动刷新
-    new HtmlWebpackIncludeAssetsPlugin({
-      assets: ['webpack-dev-server.js'],
-      append: true //在body尾部的第一条引入
-    }),
-
     // 显示进度条
     new ProgressBarPlugin()
   ]
@@ -90,17 +97,13 @@ const developmentConfig = {
     let compiler = null
     let server = null
 
+    // 给入口添加监听的脚本
+    WebpackDevServer.addDevServerEntrypoints(developmentConfig, devServerConfig)
+
     // 创建compile
     compiler = webpack(developmentConfig)
 
-    server = new WebpackDevServer(compiler, {
-      host: config.development.host,
-      port: config.development.port,
-      contentBase: config.outputPath,
-      publicPath: '/',
-      quiet: true,
-      proxy: config.development.proxy
-    })
+    server = new WebpackDevServer(compiler, devServerConfig)
 
     server.listen(config.development.port);
 
