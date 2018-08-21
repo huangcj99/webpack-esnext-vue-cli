@@ -4,7 +4,6 @@ const { createWebpackCompile } = require('../utils/create-webpack-compile')
 const { configBabelLoader } = require('../utils/config-babel-loader')
 const { filterEntries } = require('../utils/get-entries')
 const configSplitChunk = require('../utils/config-split-chunk')
-const { getEntry } = require('../utils/get-entries')
 const createBaseConfig = require('./base.config')
 
 let config = require('../config/project.config')

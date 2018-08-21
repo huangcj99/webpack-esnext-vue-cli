@@ -22,7 +22,10 @@ const main = async () => {
   })()
 
   fetch('/api/v1/coup')
-    .then((res) => console.log(res))
+    .then((res) => res.json())
+    .then(data => {
+      console.log(data)
+    })
 
   console.log(Vue)
 };

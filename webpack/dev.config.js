@@ -10,16 +10,24 @@ const { getHtmlPlugins } = require('./utils/config-html-plugin')
 const { createWebpackCompile } = require('./utils/create-webpack-compile')
 const shouldCreateNewDll = require('./utils/should-create-new-dll')
 const { filterEntries } = require('./utils/get-entries')
+const shouldCreateMockServer = require('./utils/should-create-mock-server')
 
+// dll config
 const dllConfig = require('./dll.config')
+// project config
 const config = require('./config/project.config')
+// html entries
 const htmlPlugins = getHtmlPlugins(filterEntries(config.htmlEntries), filterEntries(config.modernEntries))
+// webpack-dev-server config
 const devServerConfig = {
   host: config.development.host,
   port: config.development.port,
   contentBase: config.outputPath,
   publicPath: '/',
+  // proxy-server
   proxy: config.development.proxy,
+  // mock-server
+  before: shouldCreateMockServer(),
   inline: true,
   quiet: true,
   stats: {
@@ -87,7 +95,7 @@ const developmentConfig = {
 }
 
 ;(async () => {
-  // 创建新的dll文件
+  // 根据依赖是否变化判断是否需要创建新的dll文件
   if (shouldCreateNewDll()) {
     await createWebpackCompile(dllConfig)
   }

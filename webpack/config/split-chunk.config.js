@@ -17,6 +17,7 @@ const splitChunksConfig = {
   }
 }
 
+// 入口默认加载的chunk
 const defaultAssetsConfig = {
   chunks: [
     'manifest:inline', 

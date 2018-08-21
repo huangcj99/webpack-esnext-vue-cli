@@ -14,16 +14,16 @@ const config = {
   // lagacy entries
   legacyEntries: getEntry('./src/pages/**/+(*legacy).js'),
 
-  // output config
-  outputPath: resolve(process.cwd(), './public'),
-  publicPath: '/',
-
   // modern boundles
   modernFileName: '[name].[chunkhash].js',
   modernChunkFileName: '[name].[chunkhash].chunk.js',
   // legacy boundles
   legacyFileName: '[name].legacy.[chunkhash].js',
   legacyChunkFileName: '[name].legacy.[chunkhash].chunk.js',
+
+  // output config
+  outputPath: resolve(process.cwd(), './public'),
+  publicPath: '/',
 
   // dev config
   development: {
