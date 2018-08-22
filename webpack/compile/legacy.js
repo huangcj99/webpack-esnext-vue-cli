@@ -2,8 +2,8 @@ const webpackMerge = require('webpack-merge')
 const ManifestPlugin = require('webpack-manifest-plugin');
 const { createWebpackCompile } = require('../utils/create-webpack-compile')
 const { configBabelLoader } = require('../utils/config-babel-loader')
+const { filterEntries } = require('../utils/get-entries')
 const configSplitChunk = require('../utils/config-split-chunk')
-const { getEntry } = require('../utils/get-entries')
 const createBaseConfig = require('./base.config')
 
 let config = require('../config/project.config')
@@ -11,7 +11,6 @@ let baseConfig = createBaseConfig()
 
 // es5
 let legacyConfig = webpackMerge({}, baseConfig, {
-  entry: config.legacyEntries,
   output: {
     path: config.outputPath,
     filename: config.legacyFileName,
@@ -40,7 +39,9 @@ let legacyConfig = webpackMerge({}, baseConfig, {
 })
 
 module.exports = (prodConfig) => {
-  realLegacyConfig = webpackMerge(legacyConfig, prodConfig)
+  realLegacyConfig = webpackMerge(legacyConfig, prodConfig, {
+    entry: filterEntries(config.getLegacyEntries()),
+  })
 
   return createWebpackCompile(realLegacyConfig)
 }

@@ -1,3 +1,4 @@
+import 'assets/css/reset.css'
 import {dep1} from '../../libs/dep-1.js'
 import testChunk from '../../libs/test-chunk'
 import common from '../../libs/common-lib'
@@ -22,7 +23,10 @@ const main = async () => {
   })()
 
   fetch('/api/v1/coup')
-    .then((res) => console.log(res))
+    .then((res) => res.json())
+    .then(data => {
+      console.log(data)
+    })
 
   console.log(Vue)
 };

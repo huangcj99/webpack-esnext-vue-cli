@@ -14,7 +14,15 @@ const loadLagacyManifest = () => {
   return fs.readJsonSync(lagacyAssetsManifestPath)
 }
 
+const cleanAssetsManifest = () => {
+  fs.removeSync(modernAssetsManifestPath)
+  fs.removeSync(lagacyAssetsManifestPath)
+
+  return Promise.resolve()
+}
+
 module.exports = {
   loadModernManifest,
-  loadLagacyManifest
+  loadLagacyManifest,
+  cleanAssetsManifest
 }

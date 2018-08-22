@@ -1,12 +1,13 @@
+const webpackMerge = require('webpack-merge')
 const compileModern = require('./compile/modern')
 const compileLegacy = require('./compile/legacy')
 const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const {
-  renderTemplate
-} = require('./compile/render-template')
+const createLagacyEntries = require('./utils/create-legacy-entries')
+const { renderTemplate } = require('./compile/render-template')
+const { cleanAssetsManifest } = require('./utils/load-assets-manifest')
+const loaderConfig = require('./loader/index.config')
 
-const testConfig = {
+const testConfig = webpackMerge(loaderConfig, {
   mode: 'none',
   devtool: '#eval-source-map',
   plugins: [
@@ -28,15 +29,23 @@ const testConfig = {
       }
     })
   ]
-}
+})
 
 ;(async () => {
   // 构建es6
   await compileModern(testConfig)
+
+  // 创建es5入口文件供后面构建
+  await createLagacyEntries()
 
   // 构建es5
   await compileLegacy(testConfig)
 
   // 渲染html模板，插入对应页面依赖的资源
   await renderTemplate()
+
+  // 清理资源表
+  await cleanAssetsManifest()
+
+  console.log('Build successfully')
 })()

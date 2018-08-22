@@ -2,6 +2,7 @@ const webpackMerge = require('webpack-merge')
 const ManifestPlugin = require('webpack-manifest-plugin');
 const { createWebpackCompile } = require('../utils/create-webpack-compile')
 const { configBabelLoader } = require('../utils/config-babel-loader')
+const { filterEntries } = require('../utils/get-entries')
 const configSplitChunk = require('../utils/config-split-chunk')
 const createBaseConfig = require('./base.config')
 
@@ -10,7 +11,6 @@ let baseConfig = createBaseConfig()
 
 // es6
 let modernConfig = webpackMerge({}, baseConfig, {
-  entry: config.modernEntries,
   output: {
     path: config.outputPath,
     filename: config.modernFileName,
@@ -41,7 +41,9 @@ let modernConfig = webpackMerge({}, baseConfig, {
 })
 
 module.exports = (prodConfig) => {
-  realModernConfig = webpackMerge(modernConfig, prodConfig)
+  realModernConfig = webpackMerge(modernConfig, prodConfig, {
+    entry: filterEntries(config.modernEntries)
+  })
 
   return createWebpackCompile(realModernConfig)
 }

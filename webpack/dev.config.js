@@ -1,6 +1,7 @@
-const fs = require('fs-extra')
 const webpack = require('webpack')
+const webpackMerge = require('webpack-merge')
 const WebpackDevServer = require('webpack-dev-server')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
@@ -9,16 +10,37 @@ const { configBabelLoader } = require('./utils/config-babel-loader')
 const { getHtmlPlugins } = require('./utils/config-html-plugin')
 const { createWebpackCompile } = require('./utils/create-webpack-compile')
 const shouldCreateNewDll = require('./utils/should-create-new-dll')
+const { filterEntries } = require('./utils/get-entries')
+const shouldCreateMockServer = require('./utils/should-create-mock-server')
+const loaderConfig = require('./loader/index.config')
 
+// dll config
 const dllConfig = require('./dll.config')
+// project config
 const config = require('./config/project.config')
-const htmlPlugins = getHtmlPlugins(config.htmlEntries, config.modernEntries)
+// html entries
+const htmlPlugins = getHtmlPlugins(filterEntries(config.htmlEntries), filterEntries(config.modernEntries))
+// webpack-dev-server config
+const devServerConfig = {
+  host: config.development.host,
+  port: config.development.port,
+  contentBase: config.outputPath,
+  publicPath: '/',
+  // proxy-server
+  proxy: config.development.proxy,
+  // mock-server
+  before: shouldCreateMockServer(),
+  inline: true,
+  quiet: true,
+  stats: {
+    colors: true
+  }
+}
 
-
-const developmentConfig = {
+const developmentConfig = webpackMerge(loaderConfig, {
   devtool: '#cheap-module-eval-source-map',
   mode: config.env,
-  entry: config.modernEntries,
+  entry: filterEntries(config.modernEntries),
   output: {
     path: config.outputPath,
     filename: config.development.filename,
@@ -69,16 +91,16 @@ const developmentConfig = {
       hash: true
     }),
 
-    // 注入server的脚本，自动刷新
-    new HtmlWebpackIncludeAssetsPlugin({
-      assets: ['webpack-dev-server.js'],
-      append: true //在body尾部的第一条引入
-    })
+    // 允许错误不打断程序
+    new webpack.NoEmitOnErrorsPlugin(),
+
+    // 显示进度条
+    new ProgressBarPlugin()
   ]
-}
+})
 
 ;(async () => {
-  // 创建新的dll文件
+  // 根据依赖是否变化判断是否需要创建新的dll文件
   if (shouldCreateNewDll()) {
     await createWebpackCompile(dllConfig)
   }
@@ -88,17 +110,13 @@ const developmentConfig = {
     let compiler = null
     let server = null
 
+    // 给入口添加监听的脚本
+    WebpackDevServer.addDevServerEntrypoints(developmentConfig, devServerConfig)
+
     // 创建compile
     compiler = webpack(developmentConfig)
 
-    server = new WebpackDevServer(compiler, {
-      host: config.development.host,
-      port: config.development.port,
-      contentBase: config.outputPath,
-      publicPath: '/',
-      quiet: true,
-      proxy: config.development.proxy
-    })
+    server = new WebpackDevServer(compiler, devServerConfig)
 
     server.listen(config.development.port);
 

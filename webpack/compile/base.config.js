@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const md5 = require('md5')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const config = require('../config/project.config')
 
 // 以函数的形式创建新的base对象，避免缓存
@@ -36,7 +37,10 @@ const createBaseConfig = () => {
       }),
 
       // 允许错误不打断程序
-      new webpack.NoEmitOnErrorsPlugin()
+      new webpack.NoEmitOnErrorsPlugin(),
+
+      // 显示进度
+      new ProgressBarPlugin()
     ]
   }
 

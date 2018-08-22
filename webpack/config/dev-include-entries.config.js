@@ -6,7 +6,9 @@
 const filterEntries = [
   'all',
 
+  '/a',
+  '/b',
   // 'test/',
-];
+]
 
-module.exports = filterEntries;
+module.exports = filterEntries

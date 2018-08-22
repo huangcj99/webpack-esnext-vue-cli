@@ -4,9 +4,12 @@
   "description": "support multiple entries、exnext and es5 output、split chunk freely",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node webpack/dev.config.js",
+    "prebuild:test": "sh bin/clean-public.sh",
+    "prebuild:prod": "sh bin/clean-public.sh",
+    "dev": "cross-env NODE_ENV=development MOCK=false node webpack/dev.config.js",
+    "dev:mock": "cross-env NODE_ENV=development MOCK=true node webpack/dev.config.js",
     "build:test": "cross-env NODE_ENV=test node webpack/test.config.js",
-    "build:prod": "rm -rf ./public && cross-env NODE_ENV=production node webpack/prod.config.js"
+    "build:prod": "cross-env NODE_ENV=production node webpack/prod.config.js"
   },
   "repository": {
     "type": "git",
@@ -25,13 +28,18 @@
   },
   "homepage": "https://github.com/smallcatcat-joe/webpack-esnext-cli#readme",
   "devDependencies": {
+    "autoprefixer": "^9.1.2",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
+    "body-parser": "^1.18.3",
+    "chokidar": "^2.0.4",
     "cross-env": "^5.2.0",
+    "css-loader": "^1.0.0",
+    "file-loader": "^1.1.11",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "fs-extra": "^7.0.0",
     "glob": "^7.1.2",
@@ -39,9 +47,25 @@
     "html-webpack-include-assets-plugin": "^1.0.4",
     "html-webpack-plugin": "^3.2.0",
     "md5": "^2.2.1",
+    "mini-css-extract-plugin": "^0.4.2",
+    "mockjs": "^1.0.1-beta3",
     "node-notifier": "^5.2.1",
+    "node-sass": "^4.9.3",
     "nunjucks": "^3.0.1",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
+    "path-to-regexp": "^2.3.0",
+    "postcss-aspect-ratio-mini": "0.0.2",
+    "postcss-loader": "^3.0.0",
+    "postcss-px-to-viewport": "0.0.3",
+    "postcss-write-svg": "^3.0.1",
+    "progress-bar-webpack-plugin": "^1.11.0",
+    "sass-loader": "^7.1.0",
+    "sass-resources-loader": "^1.3.3",
+    "style-loader": "^0.22.1",
+    "url-loader": "^1.1.1",
+    "vue-loader": "^15.4.0",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.5.17",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^2.11.2",
@@ -51,6 +75,7 @@
     "write-file-webpack-plugin": "^4.3.2"
   },
   "dependencies": {
-    "vue": "2.5.17"
+    "vue": "2.5.17",
+    "vue-router": "^3.0.1"
   }
 }

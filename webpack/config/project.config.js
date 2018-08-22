@@ -11,12 +11,10 @@ const config = {
   htmlEntries: getEntry('./src/pages/**/*.html'),
   // modern entries
   modernEntries: getEntry('./src/pages/**/!(*legacy).js'),
-  // lagacy entries
-  legacyEntries: getEntry('./src/pages/**/+(*legacy).js'),
-
-  // output config
-  outputPath: resolve(process.cwd(), './public'),
-  publicPath: '/',
+  // get lagacy entries
+  getLegacyEntries: function () {
+    return getEntry('./src/pages/**/+(*legacy).js')
+  },
 
   // modern boundles
   modernFileName: '[name].[chunkhash].js',
@@ -24,6 +22,10 @@ const config = {
   // legacy boundles
   legacyFileName: '[name].legacy.[chunkhash].js',
   legacyChunkFileName: '[name].legacy.[chunkhash].chunk.js',
+
+  // output config
+  outputPath: resolve(process.cwd(), './public'),
+  publicPath: '/',
 
   // dev config
   development: {
@@ -56,18 +58,18 @@ const config = {
     extensions: ['.js', '.vue'],
     //优先搜索src下的公共资源目录
     modules: [
-      resolve("../src/assets"),
-      resolve("../src/libs"),
-      resolve("../src/components"),
-      resolve("../src/plugin"),
+      resolve(process.cwd(), "./src/assets"),
+      resolve(process.cwd(), "./src/libs"),
+      resolve(process.cwd(), "./src/components"),
+      resolve(process.cwd(), "./src/plugin"),
       "node_modules"
     ],
     alias: {
       // 公共资源
-      'assets': resolve('../src/assets'),
-      'libs': resolve('../src/libs'),
-      'components': resolve('../src/components'),
-      'plugin': resolve('../src/plugin'),
+      'assets': resolve(process.cwd(), './src/assets'),
+      'libs': resolve(process.cwd(), './src/libs'),
+      'components': resolve(process.cwd(), './src/components'),
+      'plugin': resolve(process.cwd(), './src/plugin'),
     }
   }
 }
