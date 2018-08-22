@@ -1,5 +1,4 @@
 <template>
-  <!-- 用于webpack在编译时预渲染到html中 -->
   <div class="loading-img"></div>
 </template>
 

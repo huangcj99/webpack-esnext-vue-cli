@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const webpackMerge = require('webpack-merge')
 const WebpackDevServer = require('webpack-dev-server')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
@@ -11,6 +12,7 @@ const { createWebpackCompile } = require('./utils/create-webpack-compile')
 const shouldCreateNewDll = require('./utils/should-create-new-dll')
 const { filterEntries } = require('./utils/get-entries')
 const shouldCreateMockServer = require('./utils/should-create-mock-server')
+const loaderConfig = require('./loader/index.config')
 
 // dll config
 const dllConfig = require('./dll.config')
@@ -35,7 +37,7 @@ const devServerConfig = {
   }
 }
 
-const developmentConfig = {
+const developmentConfig = webpackMerge(loaderConfig, {
   devtool: '#cheap-module-eval-source-map',
   mode: config.env,
   entry: filterEntries(config.modernEntries),
@@ -89,10 +91,13 @@ const developmentConfig = {
       hash: true
     }),
 
+    // 允许错误不打断程序
+    new webpack.NoEmitOnErrorsPlugin(),
+
     // 显示进度条
     new ProgressBarPlugin()
   ]
-}
+})
 
 ;(async () => {
   // 根据依赖是否变化判断是否需要创建新的dll文件

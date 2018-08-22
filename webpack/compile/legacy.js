@@ -11,7 +11,6 @@ let baseConfig = createBaseConfig()
 
 // es5
 let legacyConfig = webpackMerge({}, baseConfig, {
-  entry: filterEntries(config.legacyEntries),
   output: {
     path: config.outputPath,
     filename: config.legacyFileName,
@@ -40,7 +39,9 @@ let legacyConfig = webpackMerge({}, baseConfig, {
 })
 
 module.exports = (prodConfig) => {
-  realLegacyConfig = webpackMerge(legacyConfig, prodConfig)
+  realLegacyConfig = webpackMerge(legacyConfig, prodConfig, {
+    entry: filterEntries(config.getLegacyEntries()),
+  })
 
   return createWebpackCompile(realLegacyConfig)
 }

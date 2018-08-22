@@ -13,6 +13,7 @@ const {
   loadModernManifest,
   loadLagacyManifest
 } = require('../utils/load-assets-manifest')
+const loadingPreRender = require('../utils/render-loading')
 
 // 用于在Filter中，给入口html注入入口js
 let currentJsEntry = ''
@@ -22,15 +23,35 @@ let lagacyAssetManifest = {}
 // chunk cache
 let chunkCaches = {}
 let commonChunks = Array.from(defaultAssetsConfig.chunks)
-// Safair shim
+// Safair10 shim(解决nomodule无法识别)
 let shimPath = path.resolve(process.cwd(), './src/assets/shim/nomodule-shim.html')
 let shim = fs.readFileSync(shimPath).toString()
 
-const renderAssets = (boundleType, chunks) => {
+const renderLoading = (loadingAssetType) => {
+  return loadingPreRender[loadingAssetType]
+}
+
+// modern与legacy抽离的css是一样的，这里直接饮用modern的css
+const renderStyle = () => {
+  let chunkPaths = ['commons.css']
+  let styles = ''
+
+  chunkPaths.push(currentJsEntry + '.css')
+
+  chunkPaths.forEach((chunkPath) => {
+    let style = ''
+    let chunkHashPath = modernAssetManifest[chunkPath]
+
+    style = `<link href="${chunkHashPath}" rel="stylesheet">`
+
+    styles = `${styles}\n\t${style}`
+  })
+
+  return styles
+}
+
+const renderScript = (boundleType, chunks) => {
   let scripts = ''
-  
-  // 默认添加入口js
-  chunks.push(currentJsEntry)
 
   // 添加shim，解决Safair10版本不支持nomodule的问题
   if (boundleType === 'legacy') {
@@ -84,8 +105,6 @@ const renderAssets = (boundleType, chunks) => {
     scripts = `${scripts}\n\t${script}`
   })
 
-  chunks.push(currentJsEntry)
-
   return scripts
 }
 
@@ -103,15 +122,39 @@ const renderTemplate = () => {
     });
 
     // 添加注入资源的过滤器
-    env.addFilter('addAssets', (boundleType, chunks) => {
-      // 没有传入对应的chunks时加载默认chunk
-      if (!chunks) {
-        let defaultChunks = Array.from(defaultAssetsConfig.chunks)
-
-        return renderAssets(boundleType, defaultChunks)
+    env.addFilter('addAssets', (assetType, chunks) => {
+      if (assetType === 'loading-html') {
+        return renderLoading('html')
       }
 
-      return renderAssets(boundleType, chunks)
+      if (assetType === 'loading-css') {
+        return renderLoading('css')
+      }
+
+      // 插入css资源(commons.css与页面入口抽取的css)
+      if (assetType === 'css') {
+        return renderStyle()
+      }
+
+      // 默认渲染js资源
+      let modernScript = ''
+      let legacyScript = ''
+      let renderChunks = {}
+
+      // 没有传入对应的chunks时加载默认chunk
+      if (!chunks) {
+        renderChunks = Array.from(defaultAssetsConfig.chunks)
+      } else {
+        renderChunks = Array.from(chunks)
+      }
+
+      // 默认添加入口js
+      renderChunks.push(currentJsEntry)
+
+      modernScript = renderScript('modern', renderChunks)
+      legacyScript = renderScript('legacy', renderChunks)
+
+      return `${modernScript}\n\t${legacyScript}`
     });
 
     // 输出html

@@ -1,14 +1,22 @@
 const splitChunksConfig = {
   // 项目基础包
-  vendor: {
+  'vendor': {
     test: /.*test-chunk.*/g,
     name: 'vendor',
     chunks: 'all',
     enforce: true,
     priority: 10
   },
-  // 自动分割
-  commons: {
+  // 单页面需要引入vue-router，这里单独分割出来
+  'spa-vendor': {
+    test: /vue-router/g,
+    name: 'spa-vendor',
+    chunks: 'all',
+    enforce: true,
+    priority: 10
+  },
+  // 剩余chunk自动分割
+  'commons': {
     name: 'commons',
     minChunks: 2,
     minSize: 0,
@@ -20,8 +28,8 @@ const splitChunksConfig = {
 // 入口默认加载的chunk
 const defaultAssetsConfig = {
   chunks: [
-    'manifest:inline', 
-    'vendor',
+    'manifest:inline', // manifest比较小，默认内联
+    'vendor', 
     'commons'
   ]
 }

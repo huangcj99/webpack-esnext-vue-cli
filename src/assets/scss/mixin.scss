@@ -1,0 +1,84 @@
+@mixin testMixin() {
+  text-align: center;
+  color: white;
+  background-color: black;
+}
+
+/* 去除textarea的默认样式 */
+@mixin resetTextareaStyle() {
+  border: 0;
+  resize:none;
+  outline: none;
+}
+
+/* 用于修改input placeholder颜色、字体大小与偏移 */
+@mixin setPlaceholderParams($color: black, $size: 16px, $left: 0) {
+  &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: $color;
+    font-size: $size;
+    position: relative;
+    left: $left;
+    font-weight: 300;
+  }
+
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: $color;
+    font-size: $size;
+    position: relative;
+    left: $left;
+    font-weight: 300;
+  }
+
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: $color;
+    font-size: $size;
+    position: relative;
+    left: $left;
+    font-weight: 300;
+  }
+
+  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: $color;
+    font-size: $size;
+    position: relative;
+    left: $left;
+    font-weight: 300;
+  }
+}
+
+/* Android 7.0+ 可修复安卓上下不居中的问题 html标签中需要加上lang="zh-cmn-Hans" */
+@mixin fixedAndroidCenter() {
+  font-family: sans-serif;
+}
+
+/* fixed 安卓与ios下使用svg绘制单独一条边框的兼容问题 */
+@mixin setSvgSingleBorder($direction) {
+  @if $direction == top {
+    border: 0;
+    border-top: 1px solid;
+  }
+
+  @if $direction == right {
+    border: 0;
+    border-right: 1px solid;
+  }
+
+  @if $direction == bottom {
+    border: 0;
+    border-bottom: 1px solid;
+  }
+
+  @if $direction  == left {
+    border: 0;
+    border-left: 1px solid;
+  }
+}
+
+/* 设置背景图片 */
+@mixin setBackground($width, $height, $url, $size: contain) {
+  display: inline-block;
+  width: $width;
+  height: $height;
+  background: url($url) no-repeat;
+  background-size: $size;
+}

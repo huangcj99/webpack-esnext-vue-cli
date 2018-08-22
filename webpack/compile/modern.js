@@ -11,7 +11,6 @@ let baseConfig = createBaseConfig()
 
 // es6
 let modernConfig = webpackMerge({}, baseConfig, {
-  entry: filterEntries(config.modernEntries),
   output: {
     path: config.outputPath,
     filename: config.modernFileName,
@@ -42,7 +41,9 @@ let modernConfig = webpackMerge({}, baseConfig, {
 })
 
 module.exports = (prodConfig) => {
-  realModernConfig = webpackMerge(modernConfig, prodConfig)
+  realModernConfig = webpackMerge(modernConfig, prodConfig, {
+    entry: filterEntries(config.modernEntries)
+  })
 
   return createWebpackCompile(realModernConfig)
 }

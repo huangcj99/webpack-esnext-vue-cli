@@ -3,7 +3,7 @@
 *   可填写 'text','text/text'
 */
 const filterEntries = [
-  'test/',
+  // 'test/',
 ]
 
 module.exports = filterEntries
