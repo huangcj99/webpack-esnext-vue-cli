@@ -16,15 +16,18 @@ module.exports = {
   entry: {
     "vendor": vendors,
   },
-  // module: {
-  //   rules: [{
-  //     test: /\.css$/,
-  //     include: /node_modules/,
-  //     use: [
-  //       'style-loader', 'css-loader'
-  //     ]
-  //   }]
-  // },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        include: /node_modules/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      }
+    ]
+  },
   plugins: [
     //输出manifest
     new webpack.DllPlugin({

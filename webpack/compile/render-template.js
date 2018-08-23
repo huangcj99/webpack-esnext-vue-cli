@@ -42,6 +42,10 @@ const renderStyle = () => {
     let style = ''
     let chunkHashPath = modernAssetManifest[chunkPath]
 
+    if (!chunkHashPath) {
+      return
+    }
+
     style = `<link href="${chunkHashPath}" rel="stylesheet">`
 
     styles = `${styles}\n\t${style}`
@@ -70,6 +74,10 @@ const renderScript = (boundleType, chunks) => {
       chunkPath = chunkInfo[0] + '.js'
       chunkHashPath = modernAssetManifest[chunkPath]
 
+      if (!chunkHashPath) {
+        return
+      }
+
       // 入口通用chunk首次读取完后加入chunkCaches中，避免频繁进行io读取
       if (commonChunks.indexOf(chunk) !== -1) {
         // 不存在缓存中则创建，并加入缓存
@@ -87,6 +95,10 @@ const renderScript = (boundleType, chunks) => {
     if (boundleType === 'legacy') {
       chunkPath = chunkInfo[0] + '-legacy.js'
       chunkHashPath = lagacyAssetManifest[chunkPath]
+
+      if (!chunkHashPath) {
+        return
+      } 
 
       // 入口通用chunk首次读取完后加入chunkCaches中，避免频繁进行io读取
       if (commonChunks.indexOf(chunk) !== -1) {

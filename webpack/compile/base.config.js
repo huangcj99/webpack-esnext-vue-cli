@@ -7,14 +7,6 @@ const config = require('../config/project.config')
 // test与production环境共用的配置
 const createBaseConfig = () => {
   let baseConfig = {
-    module: {
-      rules: [
-         {
-           test: /\.js$/,
-           use: 'happypack/loader?id=babel'
-         }
-      ]
-    },
     resolve: config.resolve,
     plugins: [
       // 定义环境变量
@@ -35,9 +27,6 @@ const createBaseConfig = () => {
 
         return md5(chunk.mapModules((m) => m.identifier()).join()).slice(0, 10)
       }),
-
-      // 允许错误不打断程序
-      new webpack.NoEmitOnErrorsPlugin(),
 
       // 显示进度
       new ProgressBarPlugin()

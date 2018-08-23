@@ -39,7 +39,7 @@ const devServerConfig = {
 
 const developmentConfig = webpackMerge(loaderConfig, {
   devtool: '#cheap-module-eval-source-map',
-  mode: config.env,
+  mode: 'development',
   entry: filterEntries(config.modernEntries),
   output: {
     path: config.outputPath,

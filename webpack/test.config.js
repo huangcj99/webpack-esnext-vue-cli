@@ -8,12 +8,13 @@ const { cleanAssetsManifest } = require('./utils/load-assets-manifest')
 const loaderConfig = require('./loader/index.config')
 
 const testConfig = webpackMerge(loaderConfig, {
-  mode: 'none',
+  mode: 'production',
   devtool: '#eval-source-map',
   plugins: [
     // 多线程压缩
     new WebpackParallelUglifyPlugin({
       exclude: /\.min\.js$/,
+      sourceMap: true,
       // 压缩es6的代码
       uglifyES: {
         mangle: false, // 不压缩变量名
