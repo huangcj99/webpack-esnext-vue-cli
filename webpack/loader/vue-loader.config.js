@@ -10,10 +10,7 @@ const vueLoaderConfig = {
        */
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          extractCSS: true
-        }
+        loader: 'vue-loader'
       }
     ]
   },

@@ -2,7 +2,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const postcssConfig = require('../config/postcss.config')
 const config = require('../config/project.config')
 
-const openSourceMap = config.env === 'development' ? true : false
+const openSourceMap = config.env !== 'production' ? true : false
 const styleLoader = {
   loader: 'style-loader',
   options: {
@@ -12,31 +12,29 @@ const styleLoader = {
 
 let cssLoaderConfig = {
   module: {
-    rules: [
-      {
-        test: /\.css/,
-        exclude: /node_modules/,
-        use: [
-          config.env === 'development'
-            ? styleLoader
-            : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: openSourceMap
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: openSourceMap,
-              ident: 'postcss',
-              plugins: postcssConfig
-            }
+    rules: [{
+      test: /\.css$/,
+      include: /src/,
+      use: [
+        config.env === 'development' ?
+        styleLoader :
+        MiniCssExtractPlugin.loader,
+        {
+          loader: 'css-loader',
+          options: {
+            sourceMap: openSourceMap
           }
-        ]
-      }
-    ]
+        },
+        {
+          loader: 'postcss-loader',
+          options: {
+            sourceMap: openSourceMap,
+            ident: 'postcss',
+            plugins: postcssConfig
+          }
+        }
+      ]
+    }]
   },
   plugins: []
 }

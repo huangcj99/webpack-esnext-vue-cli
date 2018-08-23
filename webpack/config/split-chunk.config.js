@@ -1,15 +1,15 @@
 const splitChunksConfig = {
   // 项目基础包
   'vendor': {
-    test: /.*test-chunk.*/g,
+    test: /node_modules\/vue/g,
     name: 'vendor',
     chunks: 'all',
     enforce: true,
-    priority: 10
+    priority: 2
   },
   // 单页面需要引入vue-router，这里单独分割出来
   'spa-vendor': {
-    test: /vue-router/g,
+    test: /node_modules\/vue-router/g,
     name: 'spa-vendor',
     chunks: 'all',
     enforce: true,
