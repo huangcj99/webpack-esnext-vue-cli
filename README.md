@@ -31,7 +31,7 @@ npm run build:prod
 // It will output the ES next and lagacy(es5) boundles in public directory
 ```
 
-### 三、Inject Assets Methods
+### 三、如何注入依赖chunk
 
 采用[nunjucks](https://mozilla.github.io/nunjucks/cn/getting-started.html)模板引擎为html入口注入打包的资源
 
