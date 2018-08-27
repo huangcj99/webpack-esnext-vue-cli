@@ -18,7 +18,7 @@ const splitChunksConfig = {
   // 剩余chunk自动分割
   'commons': {
     name: 'commons',
-    minChunks: 2,
+    minChunks: 2, 
     minSize: 0,
     chunks: 'all',
     priority: 1
