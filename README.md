@@ -9,16 +9,16 @@
 
 ### 二、Start
 
-> node版本 >= v8.11.1
+> node version >= v8.11.1
 
 development:
 ```
 npm install
 
-// 开启proxy-server，用于与服务端联调
+// open the proxy-server
 npm run dev 
 
-// 开启mock-server
+// open the mock-server
 npm run dev:mock
 
 // open the broswer, http://localhost:9000
@@ -33,7 +33,7 @@ npm run build:prod
 
 ### 三、如何注入依赖chunk
 
-采用[nunjucks](https://mozilla.github.io/nunjucks/cn/getting-started.html)模板引擎为html入口注入打包的资源
+采用[nunjucks](https://mozilla.github.io/nunjucks/cn/getting-started.html)模板引擎为html入口注入打包的资源
 
 页面对应的文件说明
 ```
@@ -160,7 +160,7 @@ const splitChunksConfig = {
   }
 }
 ```
-根据优先级进行chunk分割，commons优先级最低，在其他手动配置的chunk匹配完成后，才对剩余的chunk进行打包
+根据优先级进行chunk分割，commons优先级最低，在其他手动配置的chunk匹配完成后，才对剩余的chunk进行打包，这里的分割配置按照项目需求划分就好了
 
 ### 四、开发时与打包时的入口过滤
 1、开发时（webpack/config/dev-include-entries.config.js）
