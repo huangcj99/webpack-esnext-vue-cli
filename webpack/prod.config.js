@@ -65,7 +65,7 @@ const productionConfig = webpackMerge(loaderConfig, {
   await renderTemplate()
 
   // 清理资源表
-  await cleanAssetsManifest()
+  // await cleanAssetsManifest()
 
   console.log('Build successfully')
 })()

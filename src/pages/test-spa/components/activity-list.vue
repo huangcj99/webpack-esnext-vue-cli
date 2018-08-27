@@ -36,6 +36,10 @@ export default {
         {
           id: 'activity',
           name: '用户活动'
+        },
+        {
+          id: 'loading',
+          name: '加载'
         }
       ]
     }

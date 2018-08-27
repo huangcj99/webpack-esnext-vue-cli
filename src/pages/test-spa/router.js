@@ -5,6 +5,7 @@ import ActivityList from './components/activity-list.vue'
 const Score = () => import(/* webpackChunkName: "score" */ './components/score/score.vue')
 const Healthy = () => import(/* webpackChunkName: "healthy" */ './components/healthy/healthy.vue')
 const Activity = () => import(/* webpackChunkName: "activity" */ './components/activity/activity.vue')
+const Loading = () => import(/* webpackChunkName: "loading" */ './components/loading/pre-render-loading.vue')
 
 Vue.use(Router)
 
@@ -49,6 +50,14 @@ const router = new Router({
       component: Activity,
       meta: {
         title: '用户活动'
+      }
+    },
+    {
+      path: '/loading',
+      name: '加载',
+      component: Loading,
+      meta: {
+        title: '加载'
       }
     }
   ]
