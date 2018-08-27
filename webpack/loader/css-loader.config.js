@@ -14,7 +14,7 @@ let cssLoaderConfig = {
   module: {
     rules: [{
       test: /\.css$/,
-      include: /src/,
+      include: /(node_modules|src)/,
       use: [
         config.env === 'development' ?
         styleLoader :
