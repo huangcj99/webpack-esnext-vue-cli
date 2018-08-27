@@ -223,7 +223,7 @@ let config = {
     chunkFilename: '[name].chunk.js',
     proxy: {
       '/api/**': {
-        target: 'http://test.weixin.api.renbo.dingdingyisheng.mobi', // 服务器地址
+        target: '', // 服务器地址
         changeOrigin: true
       }
     }
@@ -246,15 +246,13 @@ let config = {
       resolve(process.cwd(), "./src/assets"),
       resolve(process.cwd(), "./src/libs"),
       resolve(process.cwd(), "./src/components"),
-      resolve(process.cwd(), "./src/plugin"),
       "node_modules"
     ],
     alias: {
       // 公共资源
       'assets': resolve(process.cwd(), './src/assets'),
       'libs': resolve(process.cwd(), './src/libs'),
-      'components': resolve(process.cwd(), './src/components'),
-      'plugin': resolve(process.cwd(), './src/plugin'),
+      'components': resolve(process.cwd(), './src/components')
     }
   }
 
