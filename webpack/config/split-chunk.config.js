@@ -21,6 +21,7 @@ const splitChunksConfig = {
     minChunks: 2, 
     minSize: 0,
     chunks: 'all',
+    enforce: true, // 设置成true，避免入口通过独立分割后，不再复用commons代码，而是将剩余代码包含在业务文件中
     priority: 1
   }
 }

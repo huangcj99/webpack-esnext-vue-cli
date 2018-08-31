@@ -19,8 +19,7 @@ const configBabelLoader = (browserlist) => {
             targets: {
               browsers: browserlist,
             },
-          }],
-          'stage-2'
+          }]
         ],
         plugins: ['syntax-dynamic-import']
       }
