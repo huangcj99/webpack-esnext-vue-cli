@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import 'assets/css/reset.css'
 import {dep1} from '../../libs/dep-1.js'
 import testChunk from '../../libs/test-chunk'

@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import 'assets/css/reset.css'
 // components import
 import Vue from 'vue'
