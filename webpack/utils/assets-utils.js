@@ -19,14 +19,6 @@ const createModernAssetsScript = (assetPath, param) => {
 
 // 创建es5语法boundles（nomodule不将manifest内联）
 const createLagacyAssetsScript = (assetPath, param) => {
-  // //  参数为inline则将资源内联
-  // if (param && param === 'inline') {
-  //   let assetoutputPath = path.join(publicPath, assetPath)
-  //   let asset = fs.readFileSync(assetoutputPath).toString()
-
-  //   return `<script nomodule>${asset}</script>`
-  // }
-
   return `<script nomodule src="${assetPath}"></script>`
 }
 

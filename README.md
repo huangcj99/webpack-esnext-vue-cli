@@ -3,9 +3,11 @@
 ### 一、Feature
 
 - [Webpack4](https://webpack.github.io)
-- [Support to output ES next and lagacy(es5) boundles](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/)
-- [Multiple Entry]()
-- [preload and prefetch(todo)]()
+- [支持输出ES6与ES5包](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/)
+- [多入口]()
+
+Todo:
+- [preload and prefetch]()
 
 ### 二、Start
 
@@ -15,10 +17,10 @@ development:
 ```
 npm install
 
-// open the proxy-server
+// 开启proxy-server，用于与服务端联调
 npm run dev 
 
-// open the mock-server
+// 开启mock-server
 npm run dev:mock
 
 // open the broswer, http://localhost:9000
@@ -27,8 +29,6 @@ npm run dev:mock
 production(or test):
 ```
 npm run build:prod
-
-// It will output the ES next and lagacy(es5) boundles in public directory
 ```
 
 ### 三、如何注入依赖chunk
