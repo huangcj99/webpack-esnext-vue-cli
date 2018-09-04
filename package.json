@@ -66,6 +66,7 @@
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
+    "webpack-deep-scope-plugin": "^1.5.3",
     "webpack-dev-server": "^2.11.2",
     "webpack-manifest-plugin": "^2.0.3",
     "webpack-merge": "^4.1.4",
