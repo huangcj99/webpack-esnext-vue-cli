@@ -29,7 +29,7 @@ const splitChunksConfig = {
 // 入口默认加载的chunk
 const defaultAssetsConfig = {
   chunks: [
-    'manifest:inline', // manifest比较小，默认内联
+    'manifest',
     'vendor', 
     'commons'
   ]
