@@ -2,15 +2,21 @@ const path = require('path')
 const fs = require('fs-extra')
 const config = require('../config/project.config')
 
-const publicPath = config.outputPath
+const outputPath = config.outputPath
+const publicPath = config.publicPath
 
 // 创建es6语法boundles
 const createModernAssetsScript = (assetPath, param) => {
   //  参数为inline则将资源内联
   if (param && param === 'inline') {
-    let assetoutputPath = path.join(publicPath, assetPath)
+    let assetOutputPath = path.join(outputPath, assetPath)
+    let asset = ''
 
-    let asset = fs.readFileSync(assetoutputPath).toString()
+    // 将path中的publicPath替换成根路径
+    assetOutputPath = assetOutputPath.replace(publicPath, '/')
+
+    asset = fs.readFileSync(assetOutputPath).toString()
+    
     return `<script type="module">${asset}</script>`
   }
 
