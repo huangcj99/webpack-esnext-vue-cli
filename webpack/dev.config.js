@@ -45,7 +45,7 @@ const developmentConfig = webpackMerge(loaderConfig, {
     path: config.outputPath,
     filename: config.development.filename,
     chunkFilename: config.development.chunkFilename,
-    publicPath: config.publicPath
+    publicPath: '/'
   },
   resolve: config.resolve,
   plugins: [
