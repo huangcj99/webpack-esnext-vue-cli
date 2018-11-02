@@ -27,6 +27,28 @@ let commonChunks = Array.from(defaultAssetsConfig.chunks)
 let shimPath = path.resolve(process.cwd(), './src/assets/shim/nomodule-shim.html')
 let shim = fs.readFileSync(shimPath).toString()
 
+// 输出eruda调试工具
+const renderErudaDebugScript = () => {
+  let env = config.env
+  let erudaPath = path.resolve(process.cwd(), './src/assets/shim/add-eruda-debug.html')
+  let initScript = fs.readFileSync(erudaPath).toString()
+
+  // test环境默认打开eruda
+  if (env === 'test') {
+    return initScript
+  }
+
+  // production环境通过url加参数方式打开eruda
+  if (env === 'production') {
+    let reg = /\/\/(\s?)(if)/g
+
+    // 将if语句前的注释去掉
+    initScript = initScript.replace(reg, '$2')
+
+    return initScript
+  }
+}
+
 const renderLoading = (loadingAssetType) => {
   return loadingPreRender[loadingAssetType]
 }
@@ -163,10 +185,11 @@ const renderTemplate = () => {
       // 默认添加入口js
       renderChunks.push(currentJsEntry)
 
+      erudaDebugScript = renderErudaDebugScript()
       modernScript = renderScript('modern', renderChunks)
       legacyScript = renderScript('legacy', renderChunks)
 
-      return `${modernScript}\n\t${legacyScript}`
+      return `${modernScript}\n\t${erudaDebugScript}\n\t${legacyScript}`
     });
 
     // 输出html
