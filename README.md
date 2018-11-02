@@ -3,12 +3,12 @@
 ### 一、Feature
 
 - [Webpack4](https://webpack.github.io)
-- [支持输出ES6与ES5包](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/)
+- [支持输出ES6与ES5包, 并且引入到html页面](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/)
 - [多入口]()
+- [添加eruda移动调试工具](https://github.com/liriliri/eruda)
 
 Todo:
 - [preload and prefetch]()
-- [添加eruda移动调试工具]()
 - [增加移动端适配相关postcss插件]()
 
 ### 二、Start
