@@ -1,5 +1,7 @@
 ## Webpack Esnext CLI
 
+主要提供多入口、es6包输出（兼容es5），并没有集成react或者vue，想使用可以自行扩展，建议比较熟悉webpack配置的人用，抽象度不够，代码还是要看看的，隔壁仓库有基于react搭建的一套移动端构建框架[webpack-esnext-react-cli](https://github.com/smallcatcat-joe/webpack-esnext-react-cli)
+
 ### 一、Feature
 
 - [Webpack4](https://webpack.github.io)
