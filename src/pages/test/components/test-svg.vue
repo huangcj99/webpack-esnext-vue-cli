@@ -48,7 +48,7 @@ export default {}
   height: 20px;
   
   // ios与一部分低端安卓需要将其余三条边的border设置成0, 这里用一个mixin解决
-  @include setSvgSingleBorder(top)
+  @include setSvgSingleBorder(top);
   border-image: svg(1px-border param(--color red)) 1 stretch;
 }
 
@@ -66,7 +66,7 @@ export default {}
   margin: 10px;
   height: 20px;
   
-  @include setSvgSingleBorder(right)
+  @include setSvgSingleBorder(right);
   border-image: svg(1px-border param(--color red)) 1 stretch;
 }
 
@@ -74,7 +74,7 @@ export default {}
   margin: 10px;
   height: 20px;
   
-  @include setSvgSingleBorder(bottom)
+  @include setSvgSingleBorder(bottom);
   border-image: svg(1px-border param(--color red)) 1 stretch;
 }
 
@@ -82,7 +82,7 @@ export default {}
   margin: 10px;
   height: 20px;
   
-  @include setSvgSingleBorder(left)
+  @include setSvgSingleBorder(left);
   border-image: svg(1px-border param(--color red)) 1 stretch;
 }
 
