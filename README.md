@@ -179,6 +179,14 @@ const filterEntries = [
 module.exports = filterEntries
 ```
 
+你还可以通过命令传递需要构建的页面
+```bash
+$ npm run dev /a /b 
+# 将会构建 匹配/a /b 的页面，参数与前面配置文件相同
+# 当有命令时，回退到默认的配置
+```
+
+
 2、打包（webpack/config/exclude-entries.config.js）
 ```
 // 将test目录下在打包时排除 
@@ -188,6 +196,7 @@ const filterEntries = [
 
 module.exports = filterEntries
 ```
+
 
 ### 五、项目配置
 

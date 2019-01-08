@@ -6,8 +6,8 @@
   "scripts": {
     "prebuild:test": "sh bin/clean-public.sh",
     "prebuild:prod": "sh bin/clean-public.sh",
-    "dev": "cross-env NODE_ENV=development MOCK=false node webpack/dev.config.js",
-    "dev:mock": "cross-env NODE_ENV=development MOCK=true node webpack/dev.config.js",
+    "dev": "cross-env NODE_ENV=development MOCK=false node webpack/dev.config.js $*",
+    "dev:mock": "cross-env NODE_ENV=development MOCK=true node webpack/dev.config.js $*",
     "build:test": "cross-env NODE_ENV=test node webpack/test.config.js",
     "build:prod": "cross-env NODE_ENV=production node webpack/prod.config.js"
   },
