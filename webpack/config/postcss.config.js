@@ -24,6 +24,10 @@ const postcssConfig = [
      minPixelValue: 1
   }),
   /**
+   * 通过注释，添加3x倍率图适配
+   */
+  require('postcss-auto-set-imageset')(),
+  /**
    * browsersList在package.json中设置即可
    */
   require('autoprefixer')({
