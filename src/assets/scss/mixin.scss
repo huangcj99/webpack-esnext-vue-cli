@@ -74,11 +74,12 @@
   }
 }
 
-/* 设置背景图片 */
-@mixin setBackground($width, $height, $url, $size: contain) {
+/* 设置需要适配3倍屏的背景图片（对应路径下必须要有3倍图，否则打包时会报错） */
+@mixin setFixedBackground($width, $height, $url, $size: contain) {
   display: inline-block;
   width: $width;
   height: $height;
-  background: url($url) no-repeat;
+  background-image: url($url);  /* 3x */
+  background-repeat: no-repeat;
   background-size: $size;
 }

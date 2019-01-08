@@ -53,6 +53,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "path-to-regexp": "^2.3.0",
     "postcss-aspect-ratio-mini": "0.0.2",
+    "postcss-auto-set-imageset": "0.0.4",
     "postcss-loader": "^3.0.0",
     "postcss-px-to-viewport": "0.0.3",
     "postcss-write-svg": "^3.0.1",
