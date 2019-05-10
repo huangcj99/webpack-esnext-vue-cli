@@ -1,6 +1,9 @@
+const express = require('express')
+const colors = require('colors')
 const webpack = require('webpack')
 const webpackMerge = require('webpack-merge')
-const WebpackDevServer = require('webpack-dev-server')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
@@ -11,7 +14,6 @@ const { getHtmlPlugins } = require('./utils/config-html-plugin')
 const { createWebpackCompile } = require('./utils/create-webpack-compile')
 const shouldCreateNewDll = require('./utils/should-create-new-dll')
 const { filterEntries } = require('./utils/get-entries')
-const shouldCreateMockServer = require('./utils/should-create-mock-server')
 const loaderConfig = require('./loader/index.config')
 
 // dll config
@@ -20,22 +22,22 @@ const dllConfig = require('./dll.config')
 const config = require('./config/project.config')
 // html entries
 const htmlPlugins = getHtmlPlugins(filterEntries(config.htmlEntries), filterEntries(config.modernEntries))
-// webpack-dev-server config
-const devServerConfig = {
-  host: config.development.host,
-  port: config.development.port,
-  contentBase: config.outputPath,
-  publicPath: '/',
-  // proxy-server
-  proxy: config.development.proxy,
-  // mock-server
-  before: shouldCreateMockServer(),
-  inline: true,
-  quiet: true,
-  stats: {
-    colors: true
-  }
-}
+// // webpack-dev-server config
+// const devServerConfig = {
+//   host: config.development.host,
+//   port: config.development.port,
+//   contentBase: config.outputPath,
+//   publicPath: '/',
+//   // proxy-server
+//   proxy: config.development.proxy,
+//   // mock-server
+//   before: shouldCreateMockServer(),
+//   inline: true,
+//   quiet: true,
+//   stats: {
+//     colors: true
+//   }
+// }
 
 const developmentConfig = webpackMerge(loaderConfig, {
   devtool: '#cheap-module-eval-source-map',
@@ -59,10 +61,12 @@ const developmentConfig = webpackMerge(loaderConfig, {
     ]),
 
     // 将文件同步输出到public
-    new WriteFilePlugin(),
+    // new WriteFilePlugin(),
 
     //定义环境变量
     new webpack.DefinePlugin(config.globalVar[config.env]),
+
+    new webpack.HotModuleReplacementPlugin(),
 
     new FriendlyErrorsPlugin({
       compilationSuccessInfo: {
@@ -91,9 +95,6 @@ const developmentConfig = webpackMerge(loaderConfig, {
       hash: true
     }),
 
-    // 允许错误不打断程序
-    new webpack.NoEmitOnErrorsPlugin(),
-
     // 显示进度条
     new ProgressBarPlugin()
   ]
@@ -107,18 +108,25 @@ const developmentConfig = webpackMerge(loaderConfig, {
   
   // 开启webpack-dev-server
   await new Promise((resolve, reject) => {
-    let compiler = null
-    let server = null
+    const compiler = webpack(developmentConfig)
+    const server = express()
+    const devMiddleware = webpackDevMiddleware(compiler, {
+      hot: true,
+      publicPath: config.outputPath,
+      stats: 'errors-only',
+      noInfo: false
+    })
+    const hotMiddleware = webpackHotMiddleware(compiler)
 
-    // 给入口添加监听的脚本
-    WebpackDevServer.addDevServerEntrypoints(developmentConfig, devServerConfig)
+    server.use(devMiddleware)
+    server.use(hotMiddleware)
+    server.use('/', express.static(config.outputPath))
 
-    // 创建compile
-    compiler = webpack(developmentConfig)
-
-    server = new WebpackDevServer(compiler, devServerConfig)
-
-    server.listen(config.development.port);
+    server.listen(config.development.port, () => {
+      console.info(
+        colors.green('==> 🌎 Open up ' + colors.yellow(`http://localhost:${config.development.port}`) + ' in your browser.')
+      )
+    });
 
     resolve()
   })
