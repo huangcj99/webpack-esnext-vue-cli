@@ -30,6 +30,7 @@ const main = async () => {
     })
 
   console.log(Vue)
+  console.log('======')
 };
 
 main();
