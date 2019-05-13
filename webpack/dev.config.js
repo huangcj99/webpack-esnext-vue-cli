@@ -13,7 +13,6 @@ const { configBabelLoader } = require('./utils/config-babel-loader')
 const { getHtmlPlugins } = require('./utils/config-html-plugin')
 const { createWebpackCompile } = require('./utils/create-webpack-compile')
 const shouldCreateNewDll = require('./utils/should-create-new-dll')
-const { getEntry, filterEntries } = require('./utils/get-entries')
 const { injectHotScript } = require('./utils/open-hot')
 const loaderConfig = require('./loader/index.config')
 
