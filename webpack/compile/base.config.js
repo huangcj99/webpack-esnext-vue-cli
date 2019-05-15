@@ -19,12 +19,11 @@ const createBaseConfig = () => {
 
       // 稳定chunkId
       new webpack.NamedChunksPlugin((chunk) => {
-        if (chunk.name) {
-          return chunk.name
-        }
-
-        return md5(chunk.mapModules((m) => m.identifier()).join()).slice(0, 10)
+        if (chunk.name) return chunk.name
+        
+        return md5(Array.from(chunk.modulesIterable, m => m.id).join('_')).slice(0, 4)
       }),
+
 
       // 对代码进行作用域分析，增强tree-shaking的能力
       new WebpackDeepScopeAnalysisPlugin(),

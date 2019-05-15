@@ -101,30 +101,32 @@ const developmentConfig = webpackMerge(loaderConfig, {
 })
 
 ;(async () => {
+  let compiler = null
+  let server = null
+  let devMiddleware = null
+  let hotMiddleware = null
+
   // 根据依赖是否变化判断是否需要创建新的dll文件
   if (shouldCreateNewDll()) {
     await createWebpackCompile(dllConfig)
   }
 
-  // 开启webpack-dev-server
-  await new Promise((resolve, reject) => {
-    const compiler = webpack(injectHotScript(developmentConfig))
-    const server = express()
-    const devMiddleware = webpackDevMiddleware(compiler, {
-      inline: true,
-      hot: true,
-      publicPath: config.outputPath,
-      stats: 'errors-only',
-      noInfo: false
-    })
-    const hotMiddleware = webpackHotMiddleware(compiler)
-
-    server.use(devMiddleware)
-    server.use(hotMiddleware)
-    server.use('/', express.static(config.outputPath))
-
-    server.listen(config.development.port);
-
-    resolve()
+  // webpack
+  compiler = webpack(injectHotScript(developmentConfig))
+  devMiddleware = webpackDevMiddleware(compiler, {
+    inline: true,
+    hot: true,
+    publicPath: config.outputPath,
+    stats: 'errors-only',
+    noInfo: false
   })
+  hotMiddleware = webpackHotMiddleware(compiler)
+
+  // server
+  server = express()
+  server.use(devMiddleware)
+  server.use(hotMiddleware)
+  server.use('/', express.static(config.outputPath))
+
+  server.listen(config.development.port);
 })()
