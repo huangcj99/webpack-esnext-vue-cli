@@ -13,7 +13,7 @@ const { configBabelLoader } = require('./utils/config-babel-loader')
 const { getHtmlPlugins } = require('./utils/config-html-plugin')
 const { createWebpackCompile } = require('./utils/create-webpack-compile')
 const shouldCreateNewDll = require('./utils/should-create-new-dll')
-const { filterEntries } = require('./utils/get-entries')
+const { injectHotScript } = require('./utils/open-hot')
 const loaderConfig = require('./loader/index.config')
 
 // dll config
@@ -21,7 +21,7 @@ const dllConfig = require('./dll.config')
 // project config
 const config = require('./config/project.config')
 // html entries
-const htmlPlugins = getHtmlPlugins(filterEntries(config.htmlEntries), filterEntries(config.modernEntries))
+const htmlPlugins = getHtmlPlugins(config.htmlEntries, config.modernEntries)
 // // webpack-dev-server config
 // const devServerConfig = {
 //   host: config.development.host,
@@ -42,7 +42,7 @@ const htmlPlugins = getHtmlPlugins(filterEntries(config.htmlEntries), filterEntr
 const developmentConfig = webpackMerge(loaderConfig, {
   devtool: '#cheap-module-eval-source-map',
   mode: 'development',
-  entry: filterEntries(config.modernEntries),
+  entry: config.modernEntries,
   output: {
     path: config.outputPath,
     filename: config.development.filename,
@@ -61,7 +61,7 @@ const developmentConfig = webpackMerge(loaderConfig, {
     ]),
 
     // 将文件同步输出到public
-    // new WriteFilePlugin(),
+    new WriteFilePlugin(),
 
     //定义环境变量
     new webpack.DefinePlugin(config.globalVar[config.env]),
@@ -101,33 +101,32 @@ const developmentConfig = webpackMerge(loaderConfig, {
 })
 
 ;(async () => {
+  let compiler = null
+  let server = null
+  let devMiddleware = null
+  let hotMiddleware = null
+
   // 根据依赖是否变化判断是否需要创建新的dll文件
   if (shouldCreateNewDll()) {
     await createWebpackCompile(dllConfig)
   }
-  
-  // 开启webpack-dev-server
-  await new Promise((resolve, reject) => {
-    const compiler = webpack(developmentConfig)
-    const server = express()
-    const devMiddleware = webpackDevMiddleware(compiler, {
-      hot: true,
-      publicPath: config.outputPath,
-      stats: 'errors-only',
-      noInfo: false
-    })
-    const hotMiddleware = webpackHotMiddleware(compiler)
 
-    server.use(devMiddleware)
-    server.use(hotMiddleware)
-    server.use('/', express.static(config.outputPath))
-
-    server.listen(config.development.port, () => {
-      console.info(
-        colors.green('==> 🌎 Open up ' + colors.yellow(`http://localhost:${config.development.port}`) + ' in your browser.')
-      )
-    });
-
-    resolve()
+  // webpack
+  compiler = webpack(injectHotScript(developmentConfig))
+  devMiddleware = webpackDevMiddleware(compiler, {
+    inline: true,
+    hot: true,
+    publicPath: config.outputPath,
+    stats: 'errors-only',
+    noInfo: false
   })
+  hotMiddleware = webpackHotMiddleware(compiler)
+
+  // server
+  server = express()
+  server.use(devMiddleware)
+  server.use(hotMiddleware)
+  server.use('/', express.static(config.outputPath))
+
+  server.listen(config.development.port);
 })()

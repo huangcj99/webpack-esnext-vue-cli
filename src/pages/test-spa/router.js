@@ -2,10 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import ActivityList from './components/activity-list.vue'
 // 互动活动个子页面
-const Score = () => import(/* webpackChunkName: "score" */ './components/score/score.vue')
-const Healthy = () => import(/* webpackChunkName: "healthy" */ './components/healthy/healthy.vue')
-const Activity = () => import(/* webpackChunkName: "activity" */ './components/activity/activity.vue')
-const Loading = () => import(/* webpackChunkName: "loading" */ './components/loading/pre-render-loading.vue')
+// const Score = () => import(/* webpackChunkName: "score" */ './components/score/score.vue')
+// const Healthy = () => import(/* webpackChunkName: "healthy" */ './components/healthy/healthy.vue')
+// const Activity = () => import(/* webpackChunkName: "activity" */ './components/activity/activity.vue')
+// const Loading = () => import(/* webpackChunkName: "loading" */ './components/loading/pre-render-loading.vue')
+const Score = () => import('./components/score/score.vue')
+const Healthy = () => import('./components/healthy/healthy.vue')
+const Activity = () => import('./components/activity/activity.vue')
+const Loading = () => import('./components/loading/pre-render-loading.vue')
 
 Vue.use(Router)
 
