@@ -4,6 +4,10 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
 const config = require('../config/project.config')
 
+// 用于chunkId的碰撞校验
+const chunksSet = new Set()
+const chunkNameLen = 4
+
 // 以函数的形式创建新的base对象，避免缓存
 // test与production环境共用的配置
 const createBaseConfig = () => {
@@ -19,11 +23,20 @@ const createBaseConfig = () => {
 
       // 稳定chunkId
       new webpack.NamedChunksPlugin((chunk) => {
-        if (chunk.name) {
-          return chunk.name
-        }
+        if (chunk.name) return chunk.name
 
-        return md5(chunk.mapModules((m) => m.identifier()).join()).slice(0, 10)
+        let modules = Array.from(chunk.modulesIterable)
+        let hash = md5(modules.map(m => m.id).join('_'))
+        let startIdx = 0
+        let chunkHashName = hash.substr(startIdx, chunkNameLen)
+
+        while (chunksSet.has(chunkHashName)) {
+          startIdx++
+          chunkHashName = hash.substr(startIdx, chunkNameLen)
+        }
+        chunksSet.add(chunkHashName)
+
+        return chunkHashName
       }),
 
       // 对代码进行作用域分析，增强tree-shaking的能力
